@@ -1,12 +1,16 @@
 from cProfile import label
 import math
+from typing import Counter
 from unicodedata import name
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import turtle
 
-commands = [[5, 1, 1.5], [3, -1, -1.5], [8,0.8,-2], [10, 2, 2]]
+h1Commands = [[5, 1, 1.5], [3, -1, -1.5], [8,0.8,-2], [10, 2, 2]]
+h2Commands = [[1,5,5], [.95,1,0], [1,5,5], [.95,0,1]]
+# where param 1 is deltaT, param 2 is diagobal wheel pair 1, and param 3 is diagobal wheel pair 2
+h3Commands = [[1, 5, 5], [1, 1, -1], [1, 5, 5], [1, -1, 1]]
 width = 0.3
 length = 0.5
 width_i = 1 / width
@@ -33,7 +37,7 @@ def motionSkidSteerPredictedCorrected(V_left, V_right, x, y):
     xCorrected = math.degrees(math.cos(theataError)) * r
     return [yCorrected, xCorrected]
 
-def calculateMotion():
+def calculateMotion(commands):
     currentx = 0
     currenty = 0
     currentTheata = 0
@@ -45,18 +49,18 @@ def calculateMotion():
         currentTheata = possitionsPredicted[-1][2]
 
 # Using this method for the hw
-def calculateMotionNotCorrected():
+def calculateMotionNotCorrected(commands):
     currentx = 0
     currenty = 0
     currentTheata = 0
     for vector in commands:
-        i = .1
+        i = .01
         while i <= vector[0]: 
-            possitionsPredicted.append(motionSkidSteerPredicted(.1, vector[1], vector[2], currentx, currenty, currentTheata))
+            possitionsPredicted.append(motionSkidSteerPredicted(.01, vector[1], vector[2], currentx, currenty, currentTheata))
             currentx = possitionsPredicted[-1][0]
             currenty = possitionsPredicted[-1][1]
             currentTheata = possitionsPredicted[-1][2]
-            i += .1      
+            i += .01      
 
 
 def calculateMotionNotCorrectedWithPassedVector(vector):
@@ -69,40 +73,23 @@ def calculateMotionNotCorrectedWithPassedVector(vector):
             currentx = possitionsPredicted[-1][0]
             currenty = possitionsPredicted[-1][1]
             currentTheata = possitionsPredicted[-1][2]
-            i += .1      
-# def main():
-#     calculateMotion()
+            i += .1    
 
-#     s = turtle.getscreen()
-#     t = turtle.Turtle()
-
-#     print("Predicted Values:")
-#     for vector in  possitionsPredicted:
-#         print(vector)
-#         t.seth(vector[2])
-#         t.goto(vector[0], vector[1])
-#     print("Corrected Values:")
-#     for vector in possitionsCorrected:
-#         print(vector)
-#         t.home()
-#         t.color("blue")
-#         t.goto(vector[0], vector[1])
-
-
-#     possitionsPredicted_df = pd.DataFrame(possitionsPredicted, columns=["x possitions", "y possition", "theata"])
-#     possitionsPredicted_df.plot(x ="x possitions", y = "y possition", kind="line", label = "Predicted")
-#     possitionsCorrected_df = pd.DataFrame(possitionsCorrected, columns=["x possitions", "y possition"])
-#     possitionsCorrected_df.plot(x ="x possitions", y = "y possition", kind="line", label = "Corrected")
-
-#     plt.show()
-
-
-
+def problem2():
+    counter = 0
+    calculateMotionNotCorrected(h2Commands * 9)
+        
 
 #hw main
 def main():
-    calculateMotionNotCorrected()
-    s = turtle.getscreen()
+
+    # problem 1
+    #calculateMotionNotCorrected(h1Commands)
+
+    problem2()
+
+    s = turtle.Screen()
+    s.setup(1400, 1000)
     t = turtle.Turtle()
 
     print("Predicted Values:")
@@ -110,13 +97,21 @@ def main():
         print(vector)
         t.seth(vector[2])
         t.goto(vector[0], vector[1])
+    print("Corrected Values:")
+    # for vector in possitionsCorrected:
+    #     print(vector)
+    #     t.home()
+    #     t.color("blue")
+    #     t.goto(vector[0], vector[1])
+
+
     possitionsPredicted_df = pd.DataFrame(possitionsPredicted, columns=["x possitions", "y possition", "theata"])
     possitionsPredicted_df.plot(x ="x possitions", y = "y possition", kind="line", label = "Predicted")
+    # possitionsCorrected_df = pd.DataFrame(possitionsCorrected, columns=["x possitions", "y possition"])
+    # possitionsCorrected_df.plot(x ="x possitions", y = "y possition", kind="line", label = "Corrected")
 
     plt.show()
     turtle.done()
-    
-
 
 
 
