@@ -65,11 +65,11 @@ def calculateMotionNotCorrectedWithPassedVector(vector):
     currentTheata = 0
     i = .1
     while i <= vector[0]: 
-        possitionsPredicted.append(motionSkidSteerPredicted(.1, vector[1], vector[2], currentx, currenty, currentTheata))
-        currentx = possitionsPredicted[-1][0]
-        currenty = possitionsPredicted[-1][1]
-        currentTheata = possitionsPredicted[-1][2]
-        i += .1      
+            possitionsPredicted.append(motionSkidSteerPredicted(.1, vector[1], vector[2], currentx, currenty, currentTheata))
+            currentx = possitionsPredicted[-1][0]
+            currenty = possitionsPredicted[-1][1]
+            currentTheata = possitionsPredicted[-1][2]
+            i += .1      
 # def main():
 #     calculateMotion()
 
@@ -101,8 +101,7 @@ def calculateMotionNotCorrectedWithPassedVector(vector):
 
 #hw main
 def main():
-    calculateMotionNotCorrectedWithPassedVector(commands[0])
-
+    calculateMotionNotCorrected()
     s = turtle.getscreen()
     t = turtle.Turtle()
 
