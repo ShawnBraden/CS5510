@@ -16,7 +16,7 @@ class motion:
         y_now = y + (0.5 * (V_right + V_left) * math.degrees(math.cos(theata_Now)) * deltaT)
         return [x_now, y_now, theata_Now]
 
-    #not needed for hw but needed for midterm :)
+    # Not needed for hw but needed for midterm :)
     def motionSkidSteerPredictedCorrected(self, V_left, V_right, x, y):
         try :
             r = self.__widthAvg * ((V_right + V_left) / (V_right - V_left))
@@ -40,31 +40,18 @@ class motion:
             currentTheata = self.__possitionsPredicted[-1][2]
 
     # Using this method for the hw
-    def calculateMotionNotCorrected(self):
+    def calculateMotionNotCorrected(self, dt):
         currentx = 0
         currenty = 0
         currentTheata = 0
         for vector in self.__commands:
-            i = .01
-            while i <= vector[0]: 
-                self.__possitionsPredicted.append(self.motionSkidSteerPredicted(.01, vector[1], vector[2], currentx, currenty, currentTheata))
+            i = dt
+            while i <= vector[0]:
+                self.__possitionsPredicted.append(self.motionSkidSteerPredicted(dt, vector[1], vector[2], currentx, currenty, currentTheata))
                 currentx = self.__possitionsPredicted[-1][0]
                 currenty = self.__possitionsPredicted[-1][1]
                 currentTheata = self.__possitionsPredicted[-1][2]
-                i += .01      
-
-
-    def calculateMotionNotCorrectedWithPassedVector(self, vector):
-        currentx = 0
-        currenty = 0
-        currentTheata = 0
-        i = .1
-        while i <= vector[0]: 
-                self.__possitionsPredicted.append(self.motionSkidSteerPredicted(.1, vector[1], vector[2], currentx, currenty, currentTheata))
-                currentx = self.__possitionsPredicted[-1][0]
-                currenty = self.__possitionsPredicted[-1][1]
-                currentTheata = self.__possitionsPredicted[-1][2]
-                i += .1  
+                i += dt
 
     def getPossitionsPredicted(self):
         return self.__possitionsPredicted
