@@ -55,3 +55,25 @@ class motion:
 
     def getPossitionsPredicted(self):
         return self.__possitionsPredicted
+
+
+class motionArm():
+    def __init__(self, d):
+        self.d = d
+
+        
+    def calculateMotionArmNotCorrected(self, theata):
+        r11 = (math.cos(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) + (math.sin(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        r21 = (math.sin(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.sin(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) - (math.cos(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        r31 = - (math.sin(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[3]) * math.sin(theata[5]))
+        r12 = - (math.cos(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.sin(theata[5])) - (math.cos(theata[0]) * math.sin(theata[3]) * math.cos(theata[5])) - (math.sin(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        r22 = - (math.sin(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.sin(theata[5])) - (math.sin(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) + (math.cos(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        r32 = (math.sin(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[3]) * math.cos(theata[5]))
+        r13 = (math.cos(theata[0]) * math.cos(theata[3]) * math.sin(theata[4])) - (math.sin(theata[0]) * math.cos(theata[4]))
+        r23 = (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4])) + (math.cos(theata[0]) * math.cos(theata[4]))
+        r33 = -(math.sin(theata[3]) * math.sin(theata[4]))
+        dx =  (math.cos(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * self.d[5]) - (math.sin(theata[0]) * math.cos(theata[5]) * self.d[5]) - (math.sin(theata[0]) * self.d[2])
+        dy =  (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * self.d[5]) - (math.cos(theata[0]) * math.cos(theata[5]) * self.d[5]) + (math.cos(theata[0]) * self.d[2])
+        dz =  - (math.sin(theata[3]) * math.sin(theata[4]) * self.d[5]) + self.d[0] + self.d[1]
+
+        return dx, dy, dz
