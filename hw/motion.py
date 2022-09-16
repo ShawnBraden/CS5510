@@ -4,6 +4,7 @@ import math
 class motion:
     def __init__(self, commands, width, length):
         self.__possitionsPredicted = []
+        self.__velocityPredicted = []
         self.__commands = commands
         self.__width = width
         self.__length = length
@@ -12,9 +13,12 @@ class motion:
 
     def motionSkidSteerPredicted(self, deltaT, V_left, V_right, x, y, theata):
         theata_Now = theata + (self.__width_i * (V_right - V_left) * deltaT)
-        x_now = x - (0.5 * (V_right + V_left) * math.degrees(math.sin(theata_Now)) * deltaT)
-        y_now = y + (0.5 * (V_right + V_left) * math.degrees(math.cos(theata_Now)) * deltaT)
-        return [x_now, y_now, theata_Now]
+        theata_diff = theata_Now - theata
+        x_now = x - (0.5 * (V_right + V_left) * (math.sin(theata_Now)) * deltaT)
+        x_diff = x_now - x
+        y_now = y + (0.5 * (V_right + V_left) * (math.cos(theata_Now)) * deltaT)
+        y_diff = y_now - y
+        return [x_now, y_now, theata_Now], [x_diff, y_diff, theata_diff]
 
     # Not needed for hw but needed for midterm :)
     def motionSkidSteerPredictedCorrected(self, V_left, V_right, x, y):
@@ -47,7 +51,9 @@ class motion:
         for vector in self.__commands:
             i = dt
             while i <= vector[0]:
-                self.__possitionsPredicted.append(self.motionSkidSteerPredicted(dt, vector[1], vector[2], currentx, currenty, currentTheata))
+                var = self.motionSkidSteerPredicted(dt, vector[1], vector[2], currentx, currenty, currentTheata)
+                self.__possitionsPredicted.append(var[0])
+                self.__velocityPredicted.append(var[1])
                 currentx = self.__possitionsPredicted[-1][0]
                 currenty = self.__possitionsPredicted[-1][1]
                 currentTheata = self.__possitionsPredicted[-1][2]
@@ -55,3 +61,7 @@ class motion:
 
     def getPossitionsPredicted(self):
         return self.__possitionsPredicted
+
+    def getVelocityPredicted(self):
+        return self.__velocityPredicted
+        
