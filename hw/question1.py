@@ -7,7 +7,7 @@ from enum import Enum
 
 # param 1 is the duration of the command, param 2 is the speed of the left wheel and param 3 is the speed of the right wheel
 h1Commands = [[5, 1, 1.5], [3, -1, -1.5], [8,0.8,-2], [10, 2, 2]]
-h2Commands = [[1,5,5], [.95,1,0], [1,5,5], [.95,0,1]]
+h2Commands = [[1,5,5], [.471,1,0], [1,.3,.3], [.471,1,0], [1,5,5], [.471,0,1], [1,.3,.3], [.471,0,1]]
 
 width = 0.3
 length = 0.5
