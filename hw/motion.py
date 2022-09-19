@@ -65,27 +65,30 @@ class motion:
     def getVelocityPredicted(self):
         return self.__velocityPredicted
 
-    def getVelocityValues(self, results):
-        problemX = []
-        counter1 = 0
-        for value in results[1]:
-            problemX.append([counter1, value[0]*100000])
-            counter1 += .00001
+    def motionAckermanPredicted(self, deltaT, vRear, alpha, x, y, theata):
+        theata_Now = theata + (self.__length_i * vRear *  deltaT * math.tan(alpha))
+        theata_diff = theata_Now - theata
+        x_now = x - (vRear * (math.sin(theata_Now)) * deltaT)
+        x_diff = x_now - x
+        y_now = y + (vRear * (math.cos(theata_Now)) * deltaT)
+        y_diff = y_now - y
+        return [x_now, y_now, theata_Now], [x_diff, y_diff, theata_diff]
 
-        problemY = []
-        counter2 = 0
-        for value in results[1]:
-            problemY.append([counter2, value[1]*100000])
-            counter2 += .00001
+    def calculateMotionAckerman(self, dt):
+        currentx = 0
+        currenty = 0
+        currentTheata = 0
+        for vector in self.__commands:
+            i = dt
+            while i <= vector[0]:
+                var = self.motionAckermanPredicted(dt, vector[1], vector[2], currentx, currenty, currentTheata)
+                self.__possitionsPredicted.append(var[0])
+                self.__velocityPredicted.append(var[1])
+                currentx = self.__possitionsPredicted[-1][0]
+                currenty = self.__possitionsPredicted[-1][1]
+                currentTheata = self.__possitionsPredicted[-1][2]
+                i += dt
 
-        problemTheta = []
-        counter3 = 0
-        for value in results[1]:
-            problemTheta.append([counter3, value[2]*100000])
-            counter3 += .00001
-
-        return problemX, problemY, problemTheta
-        
 
 class motionArm():
     def __init__(self, d):
