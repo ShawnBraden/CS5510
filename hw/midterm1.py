@@ -36,20 +36,22 @@ def main():
     problem1_1X = []
     counter1 = 0
     for value in results1[1]:
-        problem1_1X.append([counter1, value*10])
+        problem1_1X.append([counter1, value[0]*10])
         counter1 += .1
 
     problem1_1Y = []
     counter2 = 0
     for value in results1[1]:
-        problem1_1Y.append([counter2, value*10])
+        problem1_1Y.append([counter2, value[1]*10])
         counter2 += .1
 
     problem1_1Theta = []
     counter3 = 0
     for value in results1[1]:
-        problem1_1Theta.append([counter3, value*10])
+        problem1_1Theta.append([counter3, value[2]*10])
         counter3 += .1
+
+    print("Theta: ", problem1_1Theta)
 
 	# Plot the resulting path and trajectory (x, y, and angular velocities)
     twoX = pd.DataFrame(problem1_1X, columns=['X', 'Y'])

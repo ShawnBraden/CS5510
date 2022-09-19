@@ -63,4 +63,25 @@ class motion:
 
     def getVelocityPredicted(self):
         return self.__velocityPredicted
+
+    def getVelocityValues(self, results):
+        problemX = []
+        counter1 = 0
+        for value in results[1]:
+            problemX.append([counter1, value[0]*100000])
+            counter1 += .00001
+
+        problemY = []
+        counter2 = 0
+        for value in results[1]:
+            problemY.append([counter2, value[1]*100000])
+            counter2 += .00001
+
+        problemTheta = []
+        counter3 = 0
+        for value in results[1]:
+            problemTheta.append([counter3, value[2]*100000])
+            counter3 += .00001
+
+        return problemX, problemY, problemTheta
         
