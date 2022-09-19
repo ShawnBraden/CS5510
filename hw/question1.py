@@ -1,6 +1,5 @@
 from re import T
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import turtle
 from motion import motion

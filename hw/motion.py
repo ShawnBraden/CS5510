@@ -1,6 +1,5 @@
 import math
 
-
 class motion:
     def __init__(self, commands, width, length):
         self.__possitionsPredicted = []
