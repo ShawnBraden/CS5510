@@ -9,6 +9,7 @@ class motion:
         self.__length = length
         self.__width_i = 1 / width
         self.__widthAvg = width / 2
+        self.__length_i = 1 / length
 
     def motionSkidSteerPredicted(self, deltaT, V_left, V_right, x, y, theata):
         theata_Now = theata + (self.__width_i * (V_right - V_left) * deltaT)
