@@ -11,6 +11,15 @@ class motion:
         self.__widthAvg = width / 2
         self.__length_i = 1 / length
 
+    def getCircleXPos(r,theta):
+        return r * math.cos(theta)
+
+    def getCircleYPos(r,theta):
+        return r * math.sin(theta)
+
+    def getCircleXYPos(r, theta):
+        return motion.getCircleXPos(r, theta), motion.getCircleYPos(r, theta)
+    
     def motionSkidSteerPredicted(self, deltaT, V_left, V_right, x, y, theata):
         theata_Now = theata + (self.__width_i * (V_right - V_left) * deltaT)
         theata_diff = theata_Now - theata
