@@ -14,6 +14,9 @@ problem1_3Commands = [[10 ,8, 0.29]]
 width = .55
 length = .75
 
+velocity = 8
+radius = 2.5
+
 
 def problem1_1():
     sim = motion(skidCommands, width, length)
@@ -35,14 +38,38 @@ def plotError(deltaT, resultsList):
     errorData = []
 
     # Calculate the error for each point based on deltaT
-    for i in range(int((1 / deltaT) + 1)):
-        positionOnCircle = (((8 * deltaT) / circumference) % circumference) * (2 * math.pi)
-        perfectPosition = motion.getCircleXYPos(2.5, positionOnCircle*i)
-        actualPosition = [resultsList[i-1][0], resultsList[i-1][1]]
-        errorData.append([(i * (10 * deltaT)), math.dist(actualPosition, perfectPosition)])
+    # for i in range(1, int((1 / deltaT) + 1)):
+    #     theata = (((8 * deltaT) / circumference) % circumference) * (2 * math.pi)
+    #     perfectPosition = motion.getCircleXYPos(2.5, theata)
+    #     actualPosition = [resultsList[i-1][0], resultsList[i-1][1]]
+    #     errorData.append([(i *  deltaT), math.dist(actualPosition, perfectPosition)])
 
+    # xy = pd.DataFrame(errorData, columns=['X', 'Y'])
+    # xy.plot(x ="X", y = "Y", kind="line", title = "X Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
+
+    time = 0 
+    perfectPositionList= []
+    simPosList= []
+
+    for simulatedPositions in resultsList:
+        # arc lenght = theata * r (where theata is in radians)
+        theata = (velocity * deltaT * time) / radius
+        print(theata)
+        perfectPosition = motion.getCircleXYPos(radius, theata)
+        perfectPositionList.append(perfectPosition)
+        simPosList.append(simulatedPositions[:2])
+        print(simulatedPositions[:2], perfectPosition)
+        
+        errorData.append([(time *  deltaT), math.dist(simulatedPositions[:2], perfectPosition)])
+        time += 1
     xy = pd.DataFrame(errorData, columns=['X', 'Y'])
     xy.plot(x ="X", y = "Y", kind="line", title = "X Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
+
+    prefect = pd.DataFrame(perfectPositionList, columns=['X', 'Y'])
+    prefect.plot(x ="X", y = "Y", kind="line", legend=None)
+    
+    sim = pd.DataFrame(simPosList, columns=['X', 'Y'])
+    sim.plot(x ="X", y = "Y", kind="line", legend=None)
     
 
 def calculateProblem1_3():
@@ -51,8 +78,8 @@ def calculateProblem1_3():
     results3 = problem1_3(.01)
 
     plotError(1, results1)
-    plotError(.1, results2)
-    plotError(.01, results3)
+    # plotError(.1, results2)
+    # plotError(.01, results3)
 
 
 def calculateProblem1_2():

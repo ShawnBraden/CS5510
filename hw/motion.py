@@ -18,7 +18,7 @@ class motion:
         return r * math.sin(theta)
 
     def getCircleXYPos(r, theta):
-        return motion.getCircleXPos(r, theta), motion.getCircleYPos(r, theta)
+        return [motion.getCircleXPos(r, theta), motion.getCircleYPos(r, theta)]
     
     def motionSkidSteerPredicted(self, deltaT, V_left, V_right, x, y, theata):
         theata_Now = theata + (self.__width_i * (V_right - V_left) * deltaT)
@@ -109,7 +109,7 @@ class motion:
                 i += dt
 
     def calculateForwardMotionAckerman(self, dt):
-        currentx = 0
+        currentx = 2.5
         currenty = 0
         currentTheata = 0
         for vector in self.__commands:
