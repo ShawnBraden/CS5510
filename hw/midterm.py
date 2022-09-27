@@ -47,7 +47,7 @@ def plotError(deltaT, resultsList):
     # xy = pd.DataFrame(errorData, columns=['X', 'Y'])
     # xy.plot(x ="X", y = "Y", kind="line", title = "X Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
 
-    time = 0 
+    time = 1 
     perfectPositionList= []
     simPosList= []
 
@@ -58,16 +58,19 @@ def plotError(deltaT, resultsList):
         perfectPosition = motion.getCircleXYPos(radius, theata)
         perfectPositionList.append(perfectPosition)
         simPosList.append(simulatedPositions[:2])
-        print(simulatedPositions[:2], perfectPosition)
+        print("Sim: ", simulatedPositions[:2], " Prefect: ", perfectPosition)
+        
         
         errorData.append([(time *  deltaT), math.dist(simulatedPositions[:2], perfectPosition)])
+        print("Error: ", errorData[-1])
         time += 1
+    
     xy = pd.DataFrame(errorData, columns=['X', 'Y'])
     xy.plot(x ="X", y = "Y", kind="line", title = "X Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
 
     prefect = pd.DataFrame(perfectPositionList, columns=['X', 'Y'])
     prefect.plot(x ="X", y = "Y", kind="line", legend=None)
-    
+
     sim = pd.DataFrame(simPosList, columns=['X', 'Y'])
     sim.plot(x ="X", y = "Y", kind="line", legend=None)
     
@@ -174,6 +177,5 @@ def main():
     calculateProblem1_3()
 
     plt.show()
-    turtle.done()
 
 main()

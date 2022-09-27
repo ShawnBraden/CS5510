@@ -111,7 +111,7 @@ class motion:
     def calculateForwardMotionAckerman(self, dt):
         currentx = 2.5
         currenty = 0
-        currentTheata = 0
+        currentTheata = 90
         for vector in self.__commands:
             i = dt
             while i <= vector[0]:
