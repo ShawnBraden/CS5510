@@ -81,8 +81,8 @@ def calculateProblem1_3():
     results3 = problem1_3(.01)
 
     plotError(1, results1)
-    # plotError(.1, results2)
-    # plotError(.01, results3)
+    plotError(.1, results2)
+    plotError(.01, results3)
 
 
 def calculateProblem1_2():
