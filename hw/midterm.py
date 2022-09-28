@@ -1,5 +1,4 @@
 import pandas as pd
-import turtle
 from motion import motion
 import matplotlib.pyplot as plt
 import math
@@ -10,6 +9,7 @@ skidCommands = [[.865, 3.54, 5.54], [1.73, 8, 10]]
 # time(seconds), velocity, alpha
 ackermanCommands = [[0.5, 8, 0.54], [2 ,8, 0.29]] # [[0.49, 8, 0.54], [1.97 ,8, 0.29]]
 problem1_3Commands = [[10 ,8, 0.29]]
+problem1_4Commands = [[10 ,7.68, 0.29]]
 
 width = .55
 length = .75
@@ -32,31 +32,49 @@ def problem1_3(dt):
     sim.calculateForwardMotionAckerman(dt)
     return sim.getPossitionsPredicted()
 
-def problem1_4():
-    sim = motion(problem1_3Commands, width, length)
-
+def problem1_4(dt):
+    sim = motion(problem1_4Commands, width, length)
+    sim.calculateForwardMotionAckermanSlip(dt)
+    return sim.getPossitionsPredicted()
+    
 def plotError(deltaT, resultsList):
     errorData = []
-    time = 1 
+    time = 1
     perfectPositionList= []
     simPosList= []
 
     for simulatedPositions in resultsList:
         # arc lenght = theata * r (where theata is in radians)
         theata = (velocity * deltaT * time) / radius
-        print(theata)
+        # print(theata)
         perfectPosition = motion.getCircleXYPos(radius, theata)
         perfectPositionList.append(perfectPosition)
         simPosList.append(simulatedPositions[:2])
-        print("Sim: ", simulatedPositions[:2], " Prefect: ", perfectPosition)
+        # print("Sim: ", simulatedPositions[:2], " Prefect: ", perfectPosition)
         
         errorData.append([(time *  deltaT), math.dist(simulatedPositions[:2], perfectPosition)])
-        print("Error: ", errorData[-1])
+        # print("Error: ", errorData[-1])
         time += 1
 
     xy = pd.DataFrame(errorData, columns=['X', 'Y'])
     xy.plot(x ="X", y = "Y", kind="line", title = "Absolute Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
-    
+
+    # xy = pd.DataFrame(perfectPositionList, columns=['X', 'Y'])
+    # xy.plot(x ="X", y = "Y", kind="line", title = "Perfect position When Delta t is " + str(deltaT), legend=None)
+
+    # xy = pd.DataFrame(simPosList, columns=['X', 'Y'])
+    # xy.plot(x ="X", y = "Y", kind="line", title = "Simulated position When Delta t is " + str(deltaT), legend=None)
+
+
+def calculateProblem1_4():
+    results1 = problem1_4(1)
+    results2 = problem1_4(.1)
+    results3 = problem1_4(.01)
+
+    plotError(1, results1)
+    plotError(.1, results2)
+    plotError(.01, results3)
+
 
 def calculateProblem1_3():
     results1 = problem1_3(1)
@@ -66,7 +84,6 @@ def calculateProblem1_3():
     plotError(1, results1)
     plotError(.1, results2)
     plotError(.01, results3)
-
 
 
 def calculateProblem1_2():
@@ -94,7 +111,7 @@ def calculateProblem1_2():
         problem1_1Theta.append([counter3, value[2]*10])
         counter3 += .1
 
-    print("Theta: ", problem1_1Theta)
+    # print("Theta: ", problem1_1Theta)
 
 	# Plot the resulting path and trajectory (x, y, and angular velocities)
     twoX = pd.DataFrame(problem1_1X, columns=['X', 'Y'])
@@ -136,7 +153,7 @@ def calculateProblem1_1():
         problem1_1Theta.append([counter3, value[2]*10])
         counter3 += .1
 
-    print("Theta: ", problem1_1Theta)
+    # print("Theta: ", problem1_1Theta)
 
 	# Plot the resulting path and trajectory (x, y, and angular velocities)
     twoX = pd.DataFrame(problem1_1X, columns=['X', 'Y'])
@@ -152,7 +169,8 @@ def main():
 
     # calculateProblem1_1()
     # calculateProblem1_2()
-    calculateProblem1_3()
+    # calculateProblem1_3()
+    calculateProblem1_4()
 
     plt.show()
 

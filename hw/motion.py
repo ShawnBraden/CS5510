@@ -84,14 +84,13 @@ class motion:
         return [x_now, y_now, theata_Now], [x_diff, y_diff, theata_diff]
 
     def forwardMotionAckermanPredicted(self, deltaT, vRear, alpha, x, y, theta):
-        x_now = x - (vRear * (math.sin(theta)) * deltaT)
+        x_now = x - (vRear * (math.sin(theta * .92)) * deltaT)
         x_diff = x_now - x
-        y_now = y + (vRear * (math.cos(theta)) * deltaT)
+        y_now = y + (vRear * (math.cos(theta * .92)) * deltaT)
         y_diff = y_now - y
         theata_Now = theta + (self.__length_i * vRear *  deltaT * math.tan(alpha))
         theata_diff = theata_Now - theta
         return [x_now, y_now, theata_Now], [x_diff, y_diff, theata_diff]
-
 
     def calculateMotionAckerman(self, dt):
         currentx = 0
@@ -116,7 +115,25 @@ class motion:
             i = dt
             self.__possitionsPredicted.append([currentx, currenty, currentTheata])
             self.__velocityPredicted.append([0, 0, 0])
-            
+
+            while i <= vector[0]:
+                var = self.forwardMotionAckermanPredicted(dt, vector[1], vector[2], currentx, currenty, currentTheata)
+                self.__possitionsPredicted.append(var[0])
+                self.__velocityPredicted.append(var[1])
+                currentx = self.__possitionsPredicted[-1][0]
+                currenty = self.__possitionsPredicted[-1][1]
+                currentTheata = self.__possitionsPredicted[-1][2]
+                i += dt
+
+    def calculateForwardMotionAckermanSlip(self, dt):
+        currentx = 2.5
+        currenty = 0
+        currentTheata = 0
+        for vector in self.__commands:
+            i = dt
+            self.__possitionsPredicted.append([currentx, currenty, currentTheata])
+            self.__velocityPredicted.append([0, 0, 0])
+
             while i <= vector[0]:
                 var = self.forwardMotionAckermanPredicted(dt, vector[1], vector[2], currentx, currenty, currentTheata)
                 self.__possitionsPredicted.append(var[0])
