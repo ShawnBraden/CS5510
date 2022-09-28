@@ -111,9 +111,12 @@ class motion:
     def calculateForwardMotionAckerman(self, dt):
         currentx = 2.5
         currenty = 0
-        currentTheata = math.pi / 2
+        currentTheata = 0
         for vector in self.__commands:
             i = dt
+            self.__possitionsPredicted.append([currentx, currenty, currentTheata])
+            self.__velocityPredicted.append([0, 0, 0])
+            
             while i <= vector[0]:
                 var = self.forwardMotionAckermanPredicted(dt, vector[1], vector[2], currentx, currenty, currentTheata)
                 self.__possitionsPredicted.append(var[0])

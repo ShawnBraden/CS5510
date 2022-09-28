@@ -13,7 +13,6 @@ problem1_3Commands = [[10 ,8, 0.29]]
 
 width = .55
 length = .75
-
 velocity = 8
 radius = 2.5
 
@@ -33,20 +32,11 @@ def problem1_3(dt):
     sim.calculateForwardMotionAckerman(dt)
     return sim.getPossitionsPredicted()
 
+def problem1_4():
+    sim = motion(problem1_3Commands, width, length)
+
 def plotError(deltaT, resultsList):
-    circumference = math.pi * 5
     errorData = []
-
-    # Calculate the error for each point based on deltaT
-    # for i in range(1, int((1 / deltaT) + 1)):
-    #     theata = (((8 * deltaT) / circumference) % circumference) * (2 * math.pi)
-    #     perfectPosition = motion.getCircleXYPos(2.5, theata)
-    #     actualPosition = [resultsList[i-1][0], resultsList[i-1][1]]
-    #     errorData.append([(i *  deltaT), math.dist(actualPosition, perfectPosition)])
-
-    # xy = pd.DataFrame(errorData, columns=['X', 'Y'])
-    # xy.plot(x ="X", y = "Y", kind="line", title = "X Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
-
     time = 1 
     perfectPositionList= []
     simPosList= []
@@ -60,19 +50,12 @@ def plotError(deltaT, resultsList):
         simPosList.append(simulatedPositions[:2])
         print("Sim: ", simulatedPositions[:2], " Prefect: ", perfectPosition)
         
-        
         errorData.append([(time *  deltaT), math.dist(simulatedPositions[:2], perfectPosition)])
         print("Error: ", errorData[-1])
         time += 1
-    
+
     xy = pd.DataFrame(errorData, columns=['X', 'Y'])
-    xy.plot(x ="X", y = "Y", kind="line", title = "X Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
-
-    prefect = pd.DataFrame(perfectPositionList, columns=['X', 'Y'])
-    prefect.plot(x ="X", y = "Y", kind="line", legend=None)
-
-    sim = pd.DataFrame(simPosList, columns=['X', 'Y'])
-    sim.plot(x ="X", y = "Y", kind="line", legend=None)
+    xy.plot(x ="X", y = "Y", kind="line", title = "Absolute Error When Delta t is " + str(deltaT), xlabel="Seconds", ylabel="Error (meters)", legend=None)
     
 
 def calculateProblem1_3():
@@ -85,14 +68,9 @@ def calculateProblem1_3():
     plotError(.01, results3)
 
 
+
 def calculateProblem1_2():
     results2 = problem1_2()
-
-    # print("Predicted Values:")
-    # for vector in results1:
-    #     print(vector)
-    #     t.seth(vector[2])
-    #     t.goto(vector[0], vector[1])
 
     possitionsPredicted_df = pd.DataFrame(results2[0], columns=["x possitions", "y possition", "theata"])
     possitionsPredicted_df.plot(x ="x possitions", y = "y possition", kind="line", legend=None)
