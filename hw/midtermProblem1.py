@@ -3,7 +3,7 @@ from motion import motion
 import matplotlib.pyplot as plt
 import math
 
-# delta t, left, right
+# time, left, right
 skidCommands = [[.865, 3.54, 5.54], [1.73, 8, 10]]
 
 # time(seconds), velocity, alpha
@@ -16,7 +16,6 @@ length = .75
 velocity = 8
 radius = 2.5
 
-
 def problem1_1():
     sim = motion(skidCommands, width, length)
     sim.calculateMotionNotCorrected(.1)
@@ -24,7 +23,7 @@ def problem1_1():
 
 def problem1_2():
     sim = motion(ackermanCommands, width, length)
-    sim.calculateMotionAckerman(.01)
+    sim.calculateMotionAckerman(.1)
     return sim.getPossitionsPredicted(), sim.getVelocityPredicted()
 
 def problem1_3(dt):
@@ -89,8 +88,8 @@ def calculateProblem1_3():
 def calculateProblem1_2():
     results2 = problem1_2()
 
-    possitionsPredicted_df = pd.DataFrame(results2[0], columns=["x possitions", "y possition", "theata"])
-    possitionsPredicted_df.plot(x ="x possitions", y = "y possition", kind="line", legend=None)
+    possitionsPredicted_df = pd.DataFrame(results2[0], columns=["X", "Y", "theata"])
+    possitionsPredicted_df.plot(x="X", y="Y", xlabel ="X", ylabel = "Y", kind="line", legend=None, title="Resulting Path")
 
     # Create the data to graph the X, Y, and Theta velocities
     problem1_1X = []
@@ -115,11 +114,11 @@ def calculateProblem1_2():
 
 	# Plot the resulting path and trajectory (x, y, and angular velocities)
     twoX = pd.DataFrame(problem1_1X, columns=['X', 'Y'])
-    twoX.plot(x ="X", y = "Y", kind="line", title = "Skid X Velocity", xlabel="Time (s)", ylabel="Velocity (m/s)", legend=None)
+    twoX.plot(x ="X", y = "Y", kind="line", title = "Ackermann X Velocity", xlabel="Time (s)", ylabel="Velocity (m/s)", legend=None)
     twoY = pd.DataFrame(problem1_1Y, columns=['X', 'Y'])
-    twoY.plot(x ="X", y = "Y", kind="line", title = "Skid Y Velocity", xlabel="Time (s)", ylabel="Velocity (m/s)", legend=None)
+    twoY.plot(x ="X", y = "Y", kind="line", title = "Ackermann Y Velocity", xlabel="Time (s)", ylabel="Velocity (m/s)", legend=None)
     twoTheta = pd.DataFrame(problem1_1Theta, columns=['X', 'Y'])
-    twoTheta.plot(x ="X", y = "Y", kind="line", title = "Skid Theta Velocity", xlabel="Time (s)", ylabel="Velocity (rad/s)", legend=None)
+    twoTheta.plot(x ="X", y = "Y", kind="line", title = "Ackermann Theta Velocity", xlabel="Time (s)", ylabel="Velocity (rad/s)", legend=None)
 
 
 def calculateProblem1_1():
@@ -131,8 +130,8 @@ def calculateProblem1_1():
     #     t.seth(vector[2])
     #     t.goto(vector[0], vector[1])
 
-    possitionsPredicted_df = pd.DataFrame(results1[0], columns=["x possitions", "y possition", "theata"])
-    possitionsPredicted_df.plot(x ="x possitions", y = "y possition", kind="line", legend=None)
+    possitionsPredicted_df = pd.DataFrame(results1[0], columns=["X", "Y", "theata"])
+    possitionsPredicted_df.plot(x="X", y="Y", xlabel ="X", ylabel = "Y", kind="line", legend=None, title="Resulting Path")
 
     # Create the data to graph the X, Y, and Theta velocities
     problem1_1X = []
@@ -164,13 +163,11 @@ def calculateProblem1_1():
     twoTheta.plot(x ="X", y = "Y", kind="line", title = "Skid Theta Velocity", xlabel="Time (s)", ylabel="Velocity (rad/s)", legend=None)
 	
 
-
 def main():
-
     # calculateProblem1_1()
-    # calculateProblem1_2()
+    calculateProblem1_2()
     # calculateProblem1_3()
-    calculateProblem1_4()
+    # calculateProblem1_4()
 
     plt.show()
 

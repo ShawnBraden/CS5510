@@ -150,17 +150,23 @@ class motionArm():
 
         
     def calculateMotionArmNotCorrected(self, theata):
-        r11 = (math.cos(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) + (math.sin(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
-        r21 = (math.sin(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.sin(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) - (math.cos(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
-        r31 = - (math.sin(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[3]) * math.sin(theata[5]))
-        r12 = - (math.cos(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.sin(theata[5])) - (math.cos(theata[0]) * math.sin(theata[3]) * math.cos(theata[5])) - (math.sin(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
-        r22 = - (math.sin(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.sin(theata[5])) - (math.sin(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) + (math.cos(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
-        r32 = (math.sin(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[3]) * math.cos(theata[5]))
-        r13 = (math.cos(theata[0]) * math.cos(theata[3]) * math.sin(theata[4])) - (math.sin(theata[0]) * math.cos(theata[4]))
-        r23 = (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4])) + (math.cos(theata[0]) * math.cos(theata[4]))
-        r33 = -(math.sin(theata[3]) * math.sin(theata[4]))
+        # r11 = (math.cos(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) + (math.sin(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        # r21 = (math.sin(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.sin(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) - (math.cos(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        # r31 = - (math.sin(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[3]) * math.sin(theata[5]))
+        # r12 = - (math.cos(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.sin(theata[5])) - (math.cos(theata[0]) * math.sin(theata[3]) * math.cos(theata[5])) - (math.sin(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        # r22 = - (math.sin(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.sin(theata[5])) - (math.sin(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) + (math.cos(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
+        # r32 = (math.sin(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[3]) * math.cos(theata[5]))
+        # r13 = (math.cos(theata[0]) * math.cos(theata[3]) * math.sin(theata[4])) - (math.sin(theata[0]) * math.cos(theata[4]))
+        # r23 = (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4])) + (math.cos(theata[0]) * math.cos(theata[4]))
+        # r33 = -(math.sin(theata[3]) * math.sin(theata[4]))
+
+        # (c1 * c4 * s5 * d6) - (s1 * c5 * d6) - (s1 * d3)
         dx =  (math.cos(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * self.d[5]) - (math.sin(theata[0]) * math.cos(theata[5]) * self.d[5]) - (math.sin(theata[0]) * self.d[2])
+        
+        # (c1 * c4 * s5 * d6) + (c1 * c5 * d6) + (c1 * d3)
         dy =  (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * self.d[5]) - (math.cos(theata[0]) * math.cos(theata[5]) * self.d[5]) + (math.cos(theata[0]) * self.d[2])
+        
+        # (-s4 * s5 * d6) + d1 + d2
         dz =  - (math.sin(theata[3]) * math.sin(theata[4]) * self.d[5]) + self.d[0] + self.d[1]
 
-        return dx, dy, dz
+        return [dx, dy, dz]
