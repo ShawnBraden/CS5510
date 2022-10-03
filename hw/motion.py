@@ -149,7 +149,7 @@ class motionArm():
         self.d = d
 
         
-    def calculateMotionArmNotCorrected(self, theata):
+    def calculateMotionArmNotCorrected(self, theata, dList=0):
         # r11 = (math.cos(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) + (math.sin(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
         # r21 = (math.sin(theata[0]) * math.cos(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.sin(theata[0]) * math.sin(theata[3]) * math.sin(theata[5])) - (math.cos(theata[0]) * math.sin(theata[4]) * math.cos(theata[5]))
         # r31 = - (math.sin(theata[3]) * math.cos(theata[4]) * math.cos(theata[5])) - (math.cos(theata[3]) * math.sin(theata[5]))
@@ -160,13 +160,27 @@ class motionArm():
         # r23 = (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4])) + (math.cos(theata[0]) * math.cos(theata[4]))
         # r33 = -(math.sin(theata[3]) * math.sin(theata[4]))
 
+        if dList != 0:
+            # Neither of these two affect the end result so we will just use the same values the entire calculation
+            d1 = self.d[0]
+            d6 = self.d[5]
+
+            # These two values will change and need to be updated as we go
+            d2 = dList[0]
+            d3 = dList[1]
+        else:
+            d1 = self.d[0]
+            d2 = self.d[1]
+            d3 = self.d[2]
+            d6 = self.d[5]
+
         # (c1 * c4 * s5 * d6) - (s1 * c5 * d6) - (s1 * d3)
-        dx =  (math.cos(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * self.d[5]) - (math.sin(theata[0]) * math.cos(theata[5]) * self.d[5]) - (math.sin(theata[0]) * self.d[2])
+        dx =  (math.cos(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * d6) - (math.sin(theata[0]) * math.cos(theata[5]) * d6) - (math.sin(theata[0]) * d3)
         
-        # (c1 * c4 * s5 * d6) + (c1 * c5 * d6) + (c1 * d3)
-        dy =  (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * self.d[5]) - (math.cos(theata[0]) * math.cos(theata[5]) * self.d[5]) + (math.cos(theata[0]) * self.d[2])
+        # (s1 * c4 * s5 * d6) + (c1 * c5 * d6) + (c1 * d3)
+        dy =  (math.sin(theata[0]) * math.cos(theata[3]) * math.sin(theata[4]) * d6) - (math.cos(theata[0]) * math.cos(theata[5]) * d6) + (math.cos(theata[0]) * d3)
         
         # (-s4 * s5 * d6) + d1 + d2
-        dz =  - (math.sin(theata[3]) * math.sin(theata[4]) * self.d[5]) + self.d[0] + self.d[1]
+        dz =  -(math.sin(theata[3]) * math.sin(theata[4]) * d6) + d1 + d2
 
         return [dx, dy, dz]
