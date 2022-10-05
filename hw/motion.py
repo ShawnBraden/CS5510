@@ -166,8 +166,8 @@ class motionArm():
             d6 = self.d[5]
 
             # These two values will change and need to be updated as we go
-            d2 = dList[0]
-            d3 = dList[1]
+            d2 = dList[1]
+            d3 = dList[2]
         else:
             d1 = self.d[0]
             d2 = self.d[1]

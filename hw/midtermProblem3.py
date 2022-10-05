@@ -2,17 +2,21 @@ import math
 import random
 from motion import motionArm
 
+STARTING_D = [1, 0.5, 1, 0, 0, 0.2]
+STARTING_THETA = [math.radians(-90), 0, 0, math.radians(-90), math.radians(90), math.radians(40)]
+END_POINT = [1.2, 0.8, 0.5]
+THRESHOLD = .001
 
-def getRandom(tScale, d1Scale, d2Scale):
-  theta1 = random.random() * tScale
-  theta4 = random.random() * tScale
-  theta5 = random.random() * tScale
-  theta6 = random.random() * tScale
-  thetas = [theta1, 0, 0, theta4, theta5, theta6]
+def getRandom(quench):
+  # theta6 doesn't change so we only need to worry about 2, 4, and 5
+  theta1 = (random.random() - 0.5) * quench
+  theta4 = (random.random() - 0.5) * quench
+  theta5 = (random.random() - 0.5) * quench
+  thetas = [theta1, theta4, theta5]
 
-  # d2 and d3 can change in the arm so we have to account for that here
-  d2 = random.random() * d1Scale
-  d3 = random.random() * d2Scale
+  # d2 and d3 also need to change
+  d2 = (random.random() - 0.5) * quench
+  d3 = (random.random() - 0.5) * quench
   dList = [d2, d3]
 
   return thetas, dList
@@ -20,40 +24,50 @@ def getRandom(tScale, d1Scale, d2Scale):
 
 def computeJointAngles():
   # theta1 = −90deg, d2 = 0.5m, d3 = 1.0m, theata4 = −90deg, theta5 = 90deg, theta6 = 40deg, d6 = 0.2m
-  startingD = [1, 0.5, 1, 0, 0, 0.2]
-  startingTheta = [math.radians(-90), 0, 0, math.radians(-90), math.radians(90), math.radians(40)]
-  endPoint = [1.2, 0.8, 0.5]
-  threshold = .01
-  arm = motionArm(startingD)
+  arm = motionArm(STARTING_D)
   
-  currentPoint = arm.calculateMotionArmNotCorrected(startingTheta)
+  currentPoint = arm.calculateMotionArmNotCorrected(STARTING_THETA)
+  currentTheta = STARTING_THETA
+  currentDistance = STARTING_D
 
-  n = 10000000
+  n = 100000
   for i in range(n):
     # quench this down so that we are have less variance over time
     if i < (.3 * n):
-      thetas, dList = getRandom(.3, 5, 0.5)
+      thetaDiff, distanceDiff = getRandom(.3)
     elif i < (.5 * n):
-      thetas, dList = getRandom(.2, 4, 0.4)
+      thetaDiff, distanceDiff = getRandom(.1)
     elif i < (.7 * n):
-      thetas, dList = getRandom(.1, 3, 0.3)
+      thetaDiff, distanceDiff = getRandom(.08)
     else:
-      thetas, dList = getRandom(.09, 2, 0.2)
-
-    # thetas, dList = getRandom(.3, 5, 0.5)
+      thetaDiff, distanceDiff = getRandom(.05)
     
-    newPoint = arm.calculateMotionArmNotCorrected(thetas, dList)
+    newThetas = [
+      currentTheta[0]+thetaDiff[0],
+      0,
+      0,
+      currentTheta[3]+thetaDiff[1], 
+      currentTheta[4]+thetaDiff[2], 
+      currentTheta[5]
+      ]
+    newDistance = [1, currentDistance[1]+distanceDiff[0], currentDistance[2]+distanceDiff[1], 0, 0, 0.2]
+    
+    newPoint = arm.calculateMotionArmNotCorrected(newThetas, newDistance)
 
-    if (math.dist(newPoint, endPoint) < math.dist(currentPoint, endPoint)):
+    if (math.dist(newPoint, END_POINT) < math.dist(currentPoint, END_POINT)):
       currentPoint = newPoint
+      currentTheta = newThetas
+      currentDistance = newDistance
       print("Improved Point: ", newPoint)
 
-    if (math.dist(currentPoint, endPoint) < threshold):
-      return thetas
+    if (math.dist(currentPoint, END_POINT) < THRESHOLD):
+      return currentPoint, currentTheta, currentDistance
       
 
 def main():
-  finalThatas = computeJointAngles()
-  print("Final Thetas: ", finalThatas)
+  finalPoint, finalThatas, finalDistances = computeJointAngles()
+  print("\nFinal Point (x, y, z): ", finalPoint)
+  print("Final Thetas (degrees): theta1 = %2d, theta4 = %2d, theta5 = %2d" % (math.degrees(finalThatas[0]), math.degrees(finalThatas[3]), math.degrees(finalThatas[4])))
+  print("Final Distances (meters): d2 = %1f, d3 = %1f\n" % (finalDistances[1], finalDistances[2]))
   
 main()
