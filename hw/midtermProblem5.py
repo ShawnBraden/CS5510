@@ -1,5 +1,4 @@
 import gym
-
 import numpy as np
 
 from gym import utils
@@ -7,25 +6,25 @@ from gym.envs.mujoco import MuJocoPyEnv
 from gym.spaces import Box
 
 
-# env = gym.make("CartPole-v1", render_mode="human")
-# observation, info = env.reset(seed=42)
+# Part C
+env = gym.make("CartPole-v1", render_mode="human")
+observation, info = env.reset(seed=42)
 
-# for _ in range(1000):
-#     action = env.action_space.sample()
-#     observation, reward, terminated, truncated, info = env.step(action)
+for _ in range(1000):
+    action = env.action_space.sample()
+    observation, reward, terminated, truncated, info = env.step(action)
 
-#     if terminated or truncated:
-#         observation, info = env.reset()
+    if terminated or truncated:
+        observation, info = env.reset()
 
-# # env_screen = env.render(mode = 'rgb_array')
-# env.close()
-
-
+# env_screen = env.render(mode = 'rgb_array')
+env.close()
 
 # import matplotlib.pyplot as plt
 # plt.imshow(env_screen)
 
 
+# Part D
 class HalfCheetahEnv(MuJocoPyEnv, utils.EzPickle):
     metadata = {
         "render_modes": [
@@ -51,6 +50,11 @@ class HalfCheetahEnv(MuJocoPyEnv, utils.EzPickle):
         ob = self._get_obs()
         reward_ctrl = -0.1 * np.square(action).sum()
         reward_run = (xposafter - xposbefore) / self.dt
+
+        # # Part D
+        # if reward_run > 3.14:
+        #     penalize speed
+
         reward = reward_ctrl + reward_run
         terminated = False
 
@@ -84,4 +88,4 @@ class HalfCheetahEnv(MuJocoPyEnv, utils.EzPickle):
         assert self.viewer is not None
         self.viewer.cam.distance = self.model.stat.extent * 0.5
 
-HalfCheetahEnv()
+# HalfCheetahEnv()
