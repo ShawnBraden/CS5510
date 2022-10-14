@@ -7,6 +7,9 @@ from fer import FER
 import pandas as pd
 import cv2
 import matplotlib.pyplot as plt 
+import numpy as np
+
+emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 
 def partA():
@@ -41,7 +44,6 @@ def partA():
   surprise = sum(vid_df.surprise)
   neutral = sum(vid_df.neutral)
 
-  emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
   emotions_values = [angry, disgust, fear, happy, sad, surprise, neutral]
 
   score_comparisons = pd.DataFrame(emotions, columns = ['Human Emotions'])
@@ -53,12 +55,45 @@ def partA():
 def partB():
   # define a video capture object
   vid = cv2.VideoCapture(0)
-    
-  while(True):
+  
+  # The dataframe that will hold the emotions score for each frame of the live video feed
+  score_comparisons = pd.DataFrame(columns = emotions)
+
+  print("Original Dataframe", score_comparisons)
+
+  i = 0
+  while(i < 10):
         
       # Capture the video frame by frame
       ret, frame = vid.read()
-    
+
+      # convert to image
+      currentImage = cv2.imwrite("./live/tempImage.jpg", frame)
+
+      # Run emotion detection on the image
+      test_image_one = plt.imread("./live/tempImage.jpg")
+      emo_detector = FER(mtcnn=True)
+      # Capture all the emotions on the image
+      captured_emotions = emo_detector.detect_emotions(test_image_one)
+      # print("Captured Emotions: ", captured_emotions)
+
+      if (not captured_emotions):
+        continue
+
+      dictionary = captured_emotions[0]["emotions"]
+      individualImageEmotions = []
+      for emotion in dictionary:
+        individualImageEmotions.append(dictionary[emotion])
+
+      # print("Individual Emotions: ", individualImageEmotions)
+      score_comparisons.loc[len(score_comparisons.index)] = individualImageEmotions
+      
+      plt.imshow(test_image_one)
+
+      # Use the top Emotion() function to call for the dominant emotion in the image
+      dominant_emotion, emotion_score = emo_detector.top_emotion(test_image_one)
+      # print(dominant_emotion, emotion_score)
+
       # Display the resulting frame
       cv2.imshow('frame', frame)
         
@@ -66,13 +101,24 @@ def partB():
       if cv2.waitKey(1) & 0xFF == ord('q'):
           break
 
-  # After the loop release the cap object
+      i += 1
+
+  # Create the csv file that will hold the emotions score
+  score_comparisons.to_csv("./emotionScore.csv", index=False)
+
   vid.release()
-  # Destroy all the windows
   cv2.destroyAllWindows()
+
 
 def main():
   # partA()
   partB()
 
+  # plot the data
+  df = pd.read_csv("./emotionScore.csv")
+  df.plot(title="Emootions over time")
+  plt.show()
+  
 main()
+
+
