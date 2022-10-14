@@ -9,7 +9,7 @@ import sys
 import pandas as pd
 
 # Put in the location of the video file that has to be processed
-location_videofile = "/content/Video_One.mp4"
+location_videofile = "./content/Video_Two.mp4"
 
 # Build the Face detection detector
 face_detector = FER(mtcnn=True)
