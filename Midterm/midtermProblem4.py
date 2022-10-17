@@ -1,15 +1,28 @@
+import math
 import gym
-import numpy as np
-
+from gym.envs.classic_control.cartpole import CartPoleEnv
 
 # # Part C
 env = gym.make("CartPole-v1", render_mode="human")
 observation, info = env.reset(seed=42)
 
+# print(env.masscart)
+# print(env.masspole)
+# print(env.state[2])
+# print(env.force_mag)
+
 # action is 0 or 1 (left or right)
 action = env.action_space.sample()
 
+# env.masscart = 4
+# env.masspole = 0.2
+# env.state[2] = 13 * (math.pi / 360)  
+# env.force_mag = 6.0
+
 for _ in range(1000):  
+
+    print("Obervation: ", observation)
+
   # determine the directon we need to move base on the pole's angle
     if (observation[2] > 0.05):  
         action = 1
@@ -30,23 +43,6 @@ for _ in range(1000):
     
     if terminated or truncated:
         observation, info = env.reset()
-        # print("\n")
+        print("\n")
 
 env.close()
-
-class increaseRewardWrapper(gym.RewardWrapper):
-    def __init__(self, env):
-        super().__init__(env)
-    
-    def reward(self, rew):
-        rew += 0.5
-        return rew
-
-class decreaseRewardWrapper(gym.RewardWrapper):
-    def __init__(self, env):
-        super().__init__(env)
-    
-    def reward(self, rew):
-        rew -= 0.5
-        return rew
-
