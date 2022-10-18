@@ -10,8 +10,6 @@ action = env.action_space.sample()
 
 for _ in range(1000):  
 
-    print("Obervation: ", observation)
-
   # determine the directon we need to move base on the pole's angle
     if (observation[2] > 0.05):  
         action = 1
@@ -21,6 +19,10 @@ for _ in range(1000):
         action = 0
     elif (observation[2] < 0.05 and observation[2] > 0 and action == 0):
         action = 1
+    if(observation[3] > 0.5):
+        action = 1
+    elif(observation[3] < -0.5):
+        action = 0
 
     observation, reward, terminated, truncated, info = env.step(action)
 
