@@ -22,11 +22,11 @@ for i in range(1000):
         action = 0
     elif (poleAngle < 0.15 and poleAngle > 0 and action == 0):
         action = 1
-    if (poleAngularVelocity > 0.25):
+    if (poleAngularVelocity > 0.075):
         action = 1
-    elif (poleAngularVelocity < -0.25):
+    elif (poleAngularVelocity < -0.075):
         action = 0
-    if(i % 7 == 0 and abs(cartPosition) > .1):
+    if(i % 5 == 0 and abs(cartPosition) > .1):
         action = 1 if cartPosition > 0 else 0
     observation, reward, terminated, truncated, info = env.step(action)
 
