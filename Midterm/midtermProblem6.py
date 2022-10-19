@@ -2,6 +2,7 @@
 # This installation will also take care of any of the above dependencies if they are missing
 # pip install FER
 
+import io
 from fer import Video
 from fer import FER
 import pandas as pd
@@ -61,38 +62,26 @@ def partB():
 
   print("Original Dataframe", score_comparisons)
 
+  emo_detector = FER(mtcnn=True)
   i = 0
   while(i < 10):
         
       # Capture the video frame by frame
       ret, frame = vid.read()
 
-      # convert to image
-      currentImage = cv2.imwrite("./live/tempImage.jpg", frame)
-
-      # Run emotion detection on the image
-      test_image_one = plt.imread("./live/tempImage.jpg")
-      emo_detector = FER(mtcnn=True)
       # Capture all the emotions on the image
-      captured_emotions = emo_detector.detect_emotions(test_image_one)
-      # print("Captured Emotions: ", captured_emotions)
+      captured_emotions = emo_detector.detect_emotions(frame)
 
       if (not captured_emotions):
         continue
 
       dictionary = captured_emotions[0]["emotions"]
       individualImageEmotions = []
+
       for emotion in dictionary:
         individualImageEmotions.append(dictionary[emotion])
 
-      # print("Individual Emotions: ", individualImageEmotions)
       score_comparisons.loc[len(score_comparisons.index)] = individualImageEmotions
-      
-      plt.imshow(test_image_one)
-
-      # Use the top Emotion() function to call for the dominant emotion in the image
-      dominant_emotion, emotion_score = emo_detector.top_emotion(test_image_one)
-      # print(dominant_emotion, emotion_score)
 
       # Display the resulting frame
       cv2.imshow('frame', frame)
@@ -104,7 +93,7 @@ def partB():
       i += 1
 
   # Create the csv file that will hold the emotions score
-  score_comparisons.to_csv("./emotionScore.csv", index=False)
+  score_comparisons.to_csv("./Midterm/emotionScore.csv", index=False)
 
   vid.release()
   cv2.destroyAllWindows()
@@ -115,7 +104,7 @@ def main():
   partB()
 
   # plot the data
-  df = pd.read_csv("./emotionScore.csv")
+  df = pd.read_csv("./Midterm/emotionScore.csv")
   df.plot(title="Emootions over time")
   plt.show()
   

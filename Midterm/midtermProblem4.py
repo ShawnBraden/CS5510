@@ -1,7 +1,7 @@
 import gym
 from gym.envs.classic_control.cartpole import CartPoleEnv
 
-# # Part C
+# Part B
 env = gym.make("CartPole-v1", render_mode="human")
 observation, info = env.reset(seed=42)
 
