@@ -95,7 +95,6 @@ def astar(maze, start, end):
             # Add the child to the open list
             open_list.append(child)
 
-
 def main():
 
     maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
@@ -118,3 +117,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
