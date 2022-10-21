@@ -9,10 +9,11 @@ See Wikipedia article (https://en.wikipedia.org/wiki/Breadth-first_search)
 """
 
 import math
+import time
 
 import matplotlib.pyplot as plt
 
-show_animation = True
+show_animation = False
 
 
 class BreadthFirstSearchPlanner:
@@ -168,15 +169,15 @@ class BreadthFirstSearchPlanner:
         self.miny = round(min(oy))
         self.maxx = round(max(ox))
         self.maxy = round(max(oy))
-        print("min_x:", self.minx)
-        print("min_y:", self.miny)
-        print("max_x:", self.maxx)
-        print("max_y:", self.maxy)
+        # print("min_x:", self.minx)
+        # print("min_y:", self.miny)
+        # print("max_x:", self.maxx)
+        # print("max_y:", self.maxy)
 
         self.xwidth = round((self.maxx - self.minx) / self.reso)
         self.ywidth = round((self.maxy - self.miny) / self.reso)
-        print("x_width:", self.xwidth)
-        print("y_width:", self.ywidth)
+        # print("x_width:", self.xwidth)
+        # print("y_width:", self.ywidth)
 
         # obstacle map generation
         self.obmap = [[False for _ in range(self.ywidth)]
@@ -207,7 +208,7 @@ class BreadthFirstSearchPlanner:
 
 
 def main():
-    print(__file__ + " start!!")
+    # print(__file__ + " start!!")
 
     # start and goal position
     sx = 10.0  # [m]
@@ -245,8 +246,18 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
-    bfs = BreadthFirstSearchPlanner(ox, oy, grid_size, robot_radius)
-    rx, ry = bfs.planning(sx, sy, gx, gy)
+
+    total = 0
+    for i in range(10):
+        tic = time.perf_counter()
+        bfs = BreadthFirstSearchPlanner(ox, oy, grid_size, robot_radius)
+        rx, ry = bfs.planning(sx, sy, gx, gy)
+        toc = time.perf_counter()
+        print(f"Found path in {toc - tic:0.4f} seconds")
+        print(len(rx), " steps to goal for BFS\n\n")
+        total += (toc - tic)
+    print(f"Average time for 10 runs {total / 10:0.4f}")
+
 
     if show_animation:  # pragma: no cover
         plt.plot(rx, ry, "-r")
