@@ -8,11 +8,12 @@ See Wikipedia article (https://en.wikipedia.org/wiki/Bidirectional_search)
 
 """
 
+from importlib.resources import path
 import math
-
+import time
 import matplotlib.pyplot as plt
 
-show_animation = True
+show_animation = False
 
 
 class BidirectionalAStarPlanner:
@@ -112,7 +113,7 @@ class BidirectionalAStarPlanner:
                     plt.pause(0.001)
 
             if current_A.x == current_B.x and current_A.y == current_B.y:
-                print("Found goal")
+                # print("Found goal")
                 meet_point_A = current_A
                 meet_point_B = current_B
                 break
@@ -257,15 +258,15 @@ class BidirectionalAStarPlanner:
         self.min_y = round(min(oy))
         self.max_x = round(max(ox))
         self.max_y = round(max(oy))
-        print("min_x:", self.min_x)
-        print("min_y:", self.min_y)
-        print("max_x:", self.max_x)
-        print("max_y:", self.max_y)
+        # print("min_x:", self.min_x)
+        # print("min_y:", self.min_y)
+        # print("max_x:", self.max_x)
+        # print("max_y:", self.max_y)
 
         self.x_width = round((self.max_x - self.min_x) / self.resolution)
         self.y_width = round((self.max_y - self.min_y) / self.resolution)
-        print("x_width:", self.x_width)
-        print("y_width:", self.y_width)
+        # print("x_width:", self.x_width)
+        # print("y_width:", self.y_width)
 
         # obstacle map generation
         self.obstacle_map = [[False for _ in range(self.y_width)]
@@ -296,11 +297,9 @@ class BidirectionalAStarPlanner:
 
 
 def main():
-    print(__file__ + " start!!")
-
     # start and goal position
-    sx = 10.0  # [m]
-    sy = 10.0  # [m]
+    sx = -5.0  # [m]
+    sy = -5.0  # [m]
     gx = 50.0  # [m]
     gy = 50.0  # [m]
     grid_size = 2.0  # [m]
@@ -334,8 +333,23 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
+    start = time.perf_counter()
     bidir_a_star = BidirectionalAStarPlanner(ox, oy, grid_size, robot_radius)
-    rx, ry = bidir_a_star.planning(sx, sy, gx, gy)
+ 
+    # Run the algorithm 10 times and take the average
+    totalDistance = 0
+    totalTime = 0
+    for i in range(10):
+        rx, ry = bidir_a_star.planning(sx, sy, gx, gy)
+        totalDistance += len(rx)
+        end = time.perf_counter()
+        pathTime = end - start
+        totalTime += pathTime
+        # print("Time: ", pathTime)
+        # print("Length: ", len(rx))
+    
+    print(f"Average time for 10 runs: {totalTime/10 : 0.4f}")
+    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
 
     if show_animation:  # pragma: no cover
         plt.plot(rx, ry, "-r")

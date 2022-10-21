@@ -10,6 +10,7 @@ import math
 import sys
 import matplotlib.pyplot as plt
 import pathlib
+import RRT
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 from RRT.rrt import RRT
