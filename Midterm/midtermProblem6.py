@@ -1,17 +1,10 @@
-# We install the FER() library to perform facial recognition
-# This installation will also take care of any of the above dependencies if they are missing
-# pip install FER
-
-import io
 from fer import Video
 from fer import FER
 import pandas as pd
 import cv2
 import matplotlib.pyplot as plt 
-import numpy as np
 
 emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-
 
 def partA():
   # Put in the location of the video file that has to be processed
@@ -52,7 +45,6 @@ def partA():
   score_comparisons
 
 
-# Part B
 def partB():
   # define a video capture object
   vid = cv2.VideoCapture(0)
@@ -65,12 +57,11 @@ def partB():
   emo_detector = FER(mtcnn=True)
   i = 0
   while(i < 10):
-        
-      # Capture the video frame by frame
       ret, frame = vid.read()
 
       # Capture all the emotions on the image
       captured_emotions = emo_detector.detect_emotions(frame)
+      print(emo_detector.top_emotion(frame))
 
       if (not captured_emotions):
         continue
@@ -95,18 +86,35 @@ def partB():
   # Create the csv file that will hold the emotions score
   score_comparisons.to_csv("./Midterm/emotionScore.csv", index=False)
 
+  df = pd.read_csv("./Midterm/emotionScore.csv")
+  df.plot(title="Emootions over time")
+
   vid.release()
   cv2.destroyAllWindows()
+
+def partC():
+  image = plt.imread("Two_Face.jpeg")
+  emo_detector = FER(mtcnn=True)
+
+  captured_emotions = emo_detector.detect_emotions(image)
+  # print(captured_emotions)
+
+  # print(captured_emotions)
+  plt.imshow(image)
+
+  # Use the top Emotion() function to call for the dominant emotion in the image
+  dominant_emotion, emotion_score = emo_detector.top_emotion(image)
+  print(dominant_emotion, emotion_score)
 
 
 def main():
   # partA()
-  partB()
+  # partB()
+  partC()
 
   # plot the data
-  df = pd.read_csv("./Midterm/emotionScore.csv")
-  df.plot(title="Emootions over time")
-  plt.show()
+  
+  # plt.show()
   
 main()
 
