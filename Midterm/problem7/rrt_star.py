@@ -13,7 +13,7 @@ import pathlib
 import RRT
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
-from RRT.rrt import RRT
+from RRT import RRT
 
 show_animation = True
 
