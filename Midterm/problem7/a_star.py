@@ -10,10 +10,10 @@ See Wikipedia article (https://en.wikipedia.org/wiki/A*_search_algorithm)
 """
 
 import math
-
+import time
 import matplotlib.pyplot as plt
 
-show_animation = True
+show_animation = False
 
 
 class AStarPlanner:
@@ -95,7 +95,7 @@ class AStarPlanner:
                     plt.pause(0.001)
 
             if current.x == goal_node.x and current.y == goal_node.y:
-                print("Find goal")
+                # print("Find goal")
                 goal_node.parent_index = current.parent_index
                 goal_node.cost = current.cost
                 break
@@ -192,15 +192,15 @@ class AStarPlanner:
         self.min_y = round(min(oy))
         self.max_x = round(max(ox))
         self.max_y = round(max(oy))
-        print("min_x:", self.min_x)
-        print("min_y:", self.min_y)
-        print("max_x:", self.max_x)
-        print("max_y:", self.max_y)
+        # print("min_x:", self.min_x)
+        # print("min_y:", self.min_y)
+        # print("max_x:", self.max_x)
+        # print("max_y:", self.max_y)
 
         self.x_width = round((self.max_x - self.min_x) / self.resolution)
         self.y_width = round((self.max_y - self.min_y) / self.resolution)
-        print("x_width:", self.x_width)
-        print("y_width:", self.y_width)
+        # print("x_width:", self.x_width)
+        # print("y_width:", self.y_width)
 
         # obstacle map generation
         self.obstacle_map = [[False for _ in range(self.y_width)]
@@ -231,36 +231,37 @@ class AStarPlanner:
 
 
 def main():
-    print(__file__ + " start!!")
-
     # start and goal position
-    sx = 10.0  # [m]
-    sy = 10.0  # [m]
-    gx = 50.0  # [m]
-    gy = 50.0  # [m]
-    grid_size = 2.0  # [m]
-    robot_radius = 1.0  # [m]
+    sx = 0.0  # [m]
+    sy = 0.0  # [m]
+    gx = 7.0  # [m]
+    gy = 6.0  # [m]
+    grid_size = 1.0  # [m]
+    robot_radius = 0.5  # [m]
 
     # set obstacle positions
     ox, oy = [], []
-    for i in range(-10, 60):
+    for i in range(-1, 10): # bottom border
         ox.append(i)
-        oy.append(-10.0)
-    for i in range(-10, 60):
-        ox.append(60.0)
+        oy.append(-1.0)
+    for i in range(-1, 10): # right border
+        ox.append(10.0)
         oy.append(i)
-    for i in range(-10, 61):
+    for i in range(-1, 11): # top border
         ox.append(i)
-        oy.append(60.0)
-    for i in range(-10, 61):
-        ox.append(-10.0)
+        oy.append(10.0)
+    for i in range(-1, 11): # left border
+        ox.append(-1.0)
         oy.append(i)
-    for i in range(-10, 40):
-        ox.append(20.0)
+    for i in range(0, 5): # botton portion of the obstacle
+        ox.append(3.0)
         oy.append(i)
-    for i in range(0, 40):
-        ox.append(40.0)
-        oy.append(60.0 - i)
+    for i in range(6, 9): # top portion of the obstacle
+        ox.append(3.0)
+        oy.append(i)
+    
+    # for i in range(len(ox)):
+    #     print("Obstacle Coordinate: ({}, {})\n".format(ox[i], oy[i]))
 
     if show_animation:  # pragma: no cover
         plt.plot(ox, oy, ".k")
@@ -269,8 +270,24 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
+
     a_star = AStarPlanner(ox, oy, grid_size, robot_radius)
-    rx, ry = a_star.planning(sx, sy, gx, gy)
+ 
+    # Run the algorithm 10 times and take the average
+    totalDistance = 0
+    totalTime = 0
+    for i in range(10):
+        start = time.perf_counter()
+        rx, ry = a_star.planning(sx, sy, gx, gy)
+        totalDistance += len(rx)
+        end = time.perf_counter()
+        pathTime = end - start
+        totalTime += pathTime
+        # print("Time: ", pathTime)
+        # print("Length: ", len(rx))
+
+    print(f"Average time: {totalTime/10 : 0.8f}")
+    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
 
     if show_animation:  # pragma: no cover
         plt.plot(rx, ry, "-r")

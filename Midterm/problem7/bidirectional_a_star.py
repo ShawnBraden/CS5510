@@ -298,33 +298,33 @@ class BidirectionalAStarPlanner:
 
 def main():
     # start and goal position
-    sx = -5.0  # [m]
-    sy = -5.0  # [m]
-    gx = 50.0  # [m]
-    gy = 50.0  # [m]
-    grid_size = 2.0  # [m]
-    robot_radius = 1.0  # [m]
+    sx = 0.0  # [m]
+    sy = 0.0  # [m]
+    gx = 7.0  # [m]
+    gy = 6.0  # [m]
+    grid_size = 1.0  # [m]
+    robot_radius = 0.5  # [m]
 
     # set obstacle positions
     ox, oy = [], []
-    for i in range(-10, 60):
+    for i in range(-1, 10): # bottom border
         ox.append(i)
-        oy.append(-10.0)
-    for i in range(-10, 60):
-        ox.append(60.0)
+        oy.append(-1.0)
+    for i in range(-1, 10): # right border
+        ox.append(10.0)
         oy.append(i)
-    for i in range(-10, 61):
+    for i in range(-1, 11): # top border
         ox.append(i)
-        oy.append(60.0)
-    for i in range(-10, 61):
-        ox.append(-10.0)
+        oy.append(10.0)
+    for i in range(-1, 11): # left border
+        ox.append(-1.0)
         oy.append(i)
-    for i in range(-10, 40):
-        ox.append(20.0)
+    for i in range(0, 5): # botton portion of the obstacle
+        ox.append(3.0)
         oy.append(i)
-    for i in range(0, 40):
-        ox.append(40.0)
-        oy.append(60.0 - i)
+    for i in range(6, 9): # top portion of the obstacle
+        ox.append(3.0)
+        oy.append(i)
 
     if show_animation:  # pragma: no cover
         plt.plot(ox, oy, ".k")
@@ -333,13 +333,13 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
-    start = time.perf_counter()
     bidir_a_star = BidirectionalAStarPlanner(ox, oy, grid_size, robot_radius)
  
     # Run the algorithm 10 times and take the average
     totalDistance = 0
     totalTime = 0
     for i in range(10):
+        start = time.perf_counter()
         rx, ry = bidir_a_star.planning(sx, sy, gx, gy)
         totalDistance += len(rx)
         end = time.perf_counter()
@@ -348,7 +348,7 @@ def main():
         # print("Time: ", pathTime)
         # print("Length: ", len(rx))
     
-    print(f"Average time for 10 runs: {totalTime/10 : 0.4f}")
+    print(f"Average time: {totalTime/10 : 0.8f}")
     print(f"Average Length: {totalDistance/10 : 0.2f}\n")
 
     if show_animation:  # pragma: no cover
