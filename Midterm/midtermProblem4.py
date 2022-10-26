@@ -9,6 +9,7 @@ action = env.action_space.sample()
 
 for i in range(1000):  
 
+<<<<<<< Updated upstream
     # determine the directon we need to move base on the pole's angle, current position and pole angular velocity
     cartPosition = observation[0]
     poleAngle = observation[2]
@@ -20,6 +21,18 @@ for i in range(1000):
     elif (poleAngle > -0.15 and poleAngle < 0 and action == 1):
         action = 0
     elif (poleAngle < 0.15 and poleAngle > 0 and action == 0):
+=======
+    print("Obervation: ", observation)
+
+  # determine the directon we need to move base on the pole's angle
+    if (observation[2] > 0.01):  
+        action = 1
+    elif (observation[2] < -0.01):
+        action = 0
+    elif (observation[2] > -0.01 and observation[2] < 0 and action == 1):
+        action = 0
+    elif (observation[2] < 0.01 and observation[2] > 0 and action == 0):
+>>>>>>> Stashed changes
         action = 1
     if (poleAngularVelocity > 0.25):
         action = 1
