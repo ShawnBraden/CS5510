@@ -1,3 +1,6 @@
+import time
+import utils
+
 class Node():
     """A node class for A* Pathfinding"""
 
@@ -111,9 +114,18 @@ def main():
     start = (0, 0)
     end = (7, 6)
 
-    path = astar(maze, start, end)
-    print(path)
+    totalDistance = 0
+    totalTime = 0
 
+    for i in range(10):
+        startTime = time.perf_counter()
+        path = astar(maze, start, end)
+        endTime = time.perf_counter()
+
+        totalDistance += utils.getTotalDistance(path)
+        totalTime += (endTime - startTime)
+    
+    utils.printResults(totalDistance, totalTime)
 
 if __name__ == '__main__':
     main()
