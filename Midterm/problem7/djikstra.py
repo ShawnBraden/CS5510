@@ -3,7 +3,6 @@ Grid based Dijkstra planning
 author: Atsushi Sakai(@Atsushi_twi)
 """
 import time
-
 import matplotlib.pyplot as plt
 import math
 
@@ -203,36 +202,34 @@ class Dijkstra:
 
 
 def main():
-    # print(__file__ + " start!!")
-
     # start and goal position
-    sx = -5.0  # [m]
-    sy = -5.0  # [m]
-    gx = 50.0  # [m]
-    gy = 50.0  # [m]
-    grid_size = 2.0  # [m]
-    robot_radius = 1.0  # [m]
+    sx = 0.0  # [m]
+    sy = 0.0  # [m]
+    gx = 7.0  # [m]
+    gy = 6.0  # [m]
+    grid_size = 1.0  # [m]
+    robot_radius = 0.5  # [m]
 
     # set obstacle positions
     ox, oy = [], []
-    for i in range(-10, 60):
+    for i in range(-1, 10): # bottom border
         ox.append(i)
-        oy.append(-10.0)
-    for i in range(-10, 60):
-        ox.append(60.0)
+        oy.append(-1.0)
+    for i in range(-1, 10): # right border
+        ox.append(10.0)
         oy.append(i)
-    for i in range(-10, 61):
+    for i in range(-1, 11): # top border
         ox.append(i)
-        oy.append(60.0)
-    for i in range(-10, 61):
-        ox.append(-10.0)
+        oy.append(10.0)
+    for i in range(-1, 11): # left border
+        ox.append(-1.0)
         oy.append(i)
-    for i in range(-10, 40):
-        ox.append(20.0)
+    for i in range(0, 5): # botton portion of the obstacle
+        ox.append(3.0)
         oy.append(i)
-    for i in range(0, 40):
-        ox.append(40.0)
-        oy.append(60.0 - i)
+    for i in range(6, 9): # top portion of the obstacle
+        ox.append(3.0)
+        oy.append(i)
 
     if show_animation:  # pragma: no cover
         plt.plot(ox, oy, ".k")
@@ -241,16 +238,26 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
-    total = 0
+    totalTime = 0
+    totalDistance = 0
     for i in range(10):
         tic = time.perf_counter()
         djikstra = Dijkstra(ox, oy, grid_size, robot_radius)
         rx, ry = djikstra.planning(sx, sy, gx, gy)
         toc = time.perf_counter()
-        print(f"Found path in {toc - tic:0.4f} seconds")
-        print(len(rx), " steps to goal for BFS\n\n")
-        total += (toc - tic)
-    print(f"Average time for 10 runs {total / 10:0.4f}")
+        totalDistance += len(rx)
+        # print(f"Found path in {toc - tic:0.4f} seconds")
+        # print(len(rx), " steps to goal for BFS\n\n")
+        totalTime += (toc - tic)
+
+    print(f"Average time: {totalTime / 10 : 0.8f}")
+    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
+
+    if show_animation:  # pragma: no cover
+        plt.plot(rx, ry, "-r")
+        plt.pause(0.01)
+        plt.show()
+
 
 
 if __name__ == '__main__':

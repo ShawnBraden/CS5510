@@ -10,10 +10,11 @@ import math
 import sys
 import matplotlib.pyplot as plt
 import pathlib
-import RRT
+import time
+
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
-from RRT import RRT
+from rrt import RRT
 
 show_animation = True
 
@@ -66,7 +67,7 @@ class RRTStar(RRT):
 
         self.node_list = [self.start]
         for i in range(self.max_iter):
-            print("Iter:", i, ", number of nodes:", len(self.node_list))
+            # print("Iter:", i, ", number of nodes:", len(self.node_list))
             rnd = self.get_random_node()
             nearest_ind = self.get_nearest_node_index(self.node_list, rnd)
             new_node = self.steer(self.node_list[nearest_ind], rnd,
@@ -247,41 +248,68 @@ class RRTStar(RRT):
 
 
 def main():
-    print("Start " + __file__)
+    # set obstacle positions
+    ox, oy = [], []
+    for i in range(-1, 10): # bottom border
+        ox.append(i)
+        oy.append(-1.0)
+    for i in range(-1, 10): # right border
+        ox.append(10.0)
+        oy.append(i)
+    for i in range(-1, 11): # top border
+        ox.append(i)
+        oy.append(10.0)
+    for i in range(-1, 11): # left border
+        ox.append(-1.0)
+        oy.append(i)
+    for i in range(0, 5): # botton portion of the obstacle
+        ox.append(3.0)
+        oy.append(i)
+    for i in range(6, 9): # top portion of the obstacle
+        ox.append(3.0)
+        oy.append(i)
 
     # ====Search Path with RRT====
-    obstacle_list = [
-        (5, 5, 1),
-        (3, 6, 2),
-        (3, 8, 2),
-        (3, 10, 2),
-        (7, 5, 2),
-        (9, 5, 2),
-        (8, 10, 1),
-        (6, 12, 1),
-    ]  # [x,y,size(radius)]
+    obstacle_list = [] # [x,y,size(radius)]
+    for i in range(len(ox)):
+        obstacle_list.append([ox[i], oy[i], 0.5])
 
     # Set Initial parameters
     rrt_star = RRTStar(
-        start=[0, 0],
-        goal=[6, 10],
-        rand_area=[-2, 15],
+        start=[0 , 0],
+        goal=[7, 6],
+        rand_area=[0, 9],
         obstacle_list=obstacle_list,
-        expand_dis=1,
-        robot_radius=0.8)
-    path = rrt_star.planning(animation=show_animation)
+        expand_dis=0.5,
+        robot_radius=0.5)
 
-    if path is None:
-        print("Cannot find path")
-    else:
-        print("found path!!")
+    # Run the algorithm 10 times and take the average
+    totalDistance = 0
+    totalTime = 0
 
-        # Draw final path
-        if show_animation:
-            rrt_star.draw_graph()
-            plt.plot([x for (x, y) in path], [y for (x, y) in path], 'r--')
-            plt.grid(True)
-    plt.show()
+    # TODO: Change this to 10
+    for i in range(1):
+        start = time.perf_counter()
+        path = rrt_star.planning(animation=show_animation)
+        # totalDistance += path[0]
+        end = time.perf_counter()
+        pathTime = end - start
+        totalTime += pathTime
+
+        if path is None:
+            print("Cannot find path")
+        else:
+            print("found path!!")
+
+    print(f"Average time: {totalTime / 10 : 0.8f}")
+    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
+
+    # Draw final path
+    if show_animation:
+        rrt_star.draw_graph()
+        plt.plot([x for (x, y) in path], [y for (x, y) in path], 'r--')
+        plt.grid(True)
+        plt.show()
 
 
 if __name__ == '__main__':
