@@ -5,6 +5,7 @@ author: Atsushi Sakai(@Atsushi_twi)
 import time
 import matplotlib.pyplot as plt
 import math
+import utils
 
 show_animation = False
 
@@ -238,26 +239,28 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
+    djikstra = Dijkstra(ox, oy, grid_size, robot_radius)
+
     totalTime = 0
     totalDistance = 0
     for i in range(10):
-        tic = time.perf_counter()
-        djikstra = Dijkstra(ox, oy, grid_size, robot_radius)
+        start = time.perf_counter()
         rx, ry = djikstra.planning(sx, sy, gx, gy)
-        toc = time.perf_counter()
-        totalDistance += len(rx)
-        # print(f"Found path in {toc - tic:0.4f} seconds")
-        # print(len(rx), " steps to goal for BFS\n\n")
-        totalTime += (toc - tic)
+        end = time.perf_counter()
 
-    print(f"Average time: {totalTime / 10 : 0.8f}")
-    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
+        path = []
+        for i in range(len(rx)):
+            path.append([rx[i], ry[i]])
+
+        totalDistance += utils.getTotalDistance(path)
+        totalTime += (end - start)
+
+    utils.printResults(totalDistance, totalTime)
 
     if show_animation:  # pragma: no cover
         plt.plot(rx, ry, "-r")
         plt.pause(0.01)
         plt.show()
-
 
 
 if __name__ == '__main__':

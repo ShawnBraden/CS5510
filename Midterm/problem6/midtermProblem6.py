@@ -84,9 +84,9 @@ def partB():
       i += 1
 
   # Create the csv file that will hold the emotions score
-  score_comparisons.to_csv("./Midterm/emotionScore.csv", index=False)
+  score_comparisons.to_csv("./Midterm/problem6/emotionScore.csv", index=False)
 
-  df = pd.read_csv("./Midterm/emotionScore.csv")
+  df = pd.read_csv("./Midterm/problem6/emotionScore.csv")
   df.plot(title="Emootions over time")
 
   vid.release()

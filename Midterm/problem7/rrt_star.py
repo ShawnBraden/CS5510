@@ -11,12 +11,13 @@ import sys
 import matplotlib.pyplot as plt
 import pathlib
 import time
+import utils
 
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 from rrt import RRT
 
-show_animation = True
+show_animation = False
 
 
 class RRTStar(RRT):
@@ -272,7 +273,7 @@ def main():
     # ====Search Path with RRT====
     obstacle_list = [] # [x,y,size(radius)]
     for i in range(len(ox)):
-        obstacle_list.append([ox[i], oy[i], 0.5])
+        obstacle_list.append([ox[i], oy[i], 0.3])
 
     # Set Initial parameters
     rrt_star = RRTStar(
@@ -280,29 +281,26 @@ def main():
         goal=[7, 6],
         rand_area=[0, 9],
         obstacle_list=obstacle_list,
-        expand_dis=0.5,
+        expand_dis=1.0,
         robot_radius=0.5)
 
     # Run the algorithm 10 times and take the average
     totalDistance = 0
     totalTime = 0
 
-    # TODO: Change this to 10
-    for i in range(1):
+    for i in range(10):
         start = time.perf_counter()
         path = rrt_star.planning(animation=show_animation)
-        # totalDistance += path[0]
         end = time.perf_counter()
-        pathTime = end - start
-        totalTime += pathTime
 
-        if path is None:
-            print("Cannot find path")
-        else:
-            print("found path!!")
+        if (path == None):
+            print("No path found")
+            return
+        
+        totalDistance += utils.getTotalDistance(path)
+        totalTime += (end - start)
 
-    print(f"Average time: {totalTime / 10 : 0.8f}")
-    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
+    utils.printResults(totalDistance, totalTime)
 
     # Draw final path
     if show_animation:

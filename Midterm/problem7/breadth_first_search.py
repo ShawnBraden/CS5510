@@ -10,7 +10,7 @@ See Wikipedia article (https://en.wikipedia.org/wiki/Breadth-first_search)
 
 import math
 import time
-
+import utils
 import matplotlib.pyplot as plt
 
 show_animation = False
@@ -218,22 +218,22 @@ def main():
 
     # set obstacle positions
     ox, oy = [], []
-    for i in range(-1, 10): # bottom border
+    for i in range(-1, 10):  # bottom border
         ox.append(i)
         oy.append(-1.0)
-    for i in range(-1, 10): # right border
+    for i in range(-1, 10):  # right border
         ox.append(10.0)
         oy.append(i)
-    for i in range(-1, 11): # top border
+    for i in range(-1, 11):  # top border
         ox.append(i)
         oy.append(10.0)
-    for i in range(-1, 11): # left border
+    for i in range(-1, 11):  # left border
         ox.append(-1.0)
         oy.append(i)
-    for i in range(0, 5): # botton portion of the obstacle
+    for i in range(0, 5):  # botton portion of the obstacle
         ox.append(3.0)
         oy.append(i)
-    for i in range(6, 9): # top portion of the obstacle
+    for i in range(6, 9):  # top portion of the obstacle
         ox.append(3.0)
         oy.append(i)
 
@@ -244,20 +244,23 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
+    bfs = BreadthFirstSearchPlanner(ox, oy, grid_size, robot_radius)
+
     totalTime = 0
     totalDistance = 0
     for i in range(10):
-        tic = time.perf_counter()
-        bfs = BreadthFirstSearchPlanner(ox, oy, grid_size, robot_radius)
+        start = time.perf_counter()
         rx, ry = bfs.planning(sx, sy, gx, gy)
-        toc = time.perf_counter()
-        # print(f"Found path in {toc - tic:0.4f} seconds")
-        # print(len(rx), " steps to goal for BFS\n\n")
-        totalDistance += len(rx)
-        totalTime += (toc - tic)
+        end = time.perf_counter()
 
-    print(f"Average time: {totalTime / 10 : 0.8f}")
-    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
+        path = []
+        for i in range(len(rx)):
+            path.append([rx[i], ry[i]])
+
+        totalDistance += utils.getTotalDistance(path)
+        totalTime += (end - start)
+
+    utils.printResults(totalDistance, totalTime)
 
     if show_animation:  # pragma: no cover
         plt.plot(rx, ry, "-r")

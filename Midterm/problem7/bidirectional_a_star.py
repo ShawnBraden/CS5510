@@ -8,10 +8,10 @@ See Wikipedia article (https://en.wikipedia.org/wiki/Bidirectional_search)
 
 """
 
-from importlib.resources import path
 import math
 import time
 import matplotlib.pyplot as plt
+import utils
 
 show_animation = False
 
@@ -335,21 +335,21 @@ def main():
 
     bidir_a_star = BidirectionalAStarPlanner(ox, oy, grid_size, robot_radius)
  
-    # Run the algorithm 10 times and take the average
     totalDistance = 0
     totalTime = 0
     for i in range(10):
         start = time.perf_counter()
         rx, ry = bidir_a_star.planning(sx, sy, gx, gy)
-        totalDistance += len(rx)
         end = time.perf_counter()
-        pathTime = end - start
-        totalTime += pathTime
-        # print("Time: ", pathTime)
-        # print("Length: ", len(rx))
+
+        path = []
+        for i in range(len(rx)):
+            path.append([rx[i], ry[i]])
+        
+        totalDistance += utils.getTotalDistance(path)
+        totalTime += (end - start)
     
-    print(f"Average time: {totalTime/10 : 0.8f}")
-    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
+    utils.printResults(totalDistance, totalTime)
 
     if show_animation:  # pragma: no cover
         plt.plot(rx, ry, "-r")

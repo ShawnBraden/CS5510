@@ -9,9 +9,10 @@ See Wikipedia article (https://en.wikipedia.org/wiki/A*_search_algorithm)
 
 """
 
-import math
+import utils
 import time
 import matplotlib.pyplot as plt
+import math
 
 show_animation = False
 
@@ -270,24 +271,23 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
-
     a_star = AStarPlanner(ox, oy, grid_size, robot_radius)
- 
-    # Run the algorithm 10 times and take the average
+
     totalDistance = 0
     totalTime = 0
     for i in range(10):
         start = time.perf_counter()
         rx, ry = a_star.planning(sx, sy, gx, gy)
-        totalDistance += len(rx)
         end = time.perf_counter()
-        pathTime = end - start
-        totalTime += pathTime
-        # print("Time: ", pathTime)
-        # print("Length: ", len(rx))
 
-    print(f"Average time: {totalTime/10 : 0.8f}")
-    print(f"Average Length: {totalDistance/10 : 0.2f}\n")
+        path = []
+        for i in range(len(rx)):
+            path.append([rx[i], ry[i]])
+
+        totalDistance += utils.getTotalDistance(path)
+        totalTime += (end - start)
+
+    utils.printResults(totalDistance, totalTime)
 
     if show_animation:  # pragma: no cover
         plt.plot(rx, ry, "-r")
