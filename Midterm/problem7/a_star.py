@@ -294,6 +294,8 @@ def main():
         plt.pause(0.001)
         plt.show()
 
+    return totalDistance, totalTime
+
 
 if __name__ == '__main__':
     main()

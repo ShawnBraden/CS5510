@@ -126,6 +126,8 @@ def main():
         totalTime += (endTime - startTime)
     
     utils.printResults(totalDistance, totalTime)
+    return totalDistance, totalTime
+
 
 if __name__ == '__main__':
     main()

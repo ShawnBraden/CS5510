@@ -309,6 +309,8 @@ def main():
         plt.grid(True)
         plt.show()
 
+    return totalDistance, totalTime
+
 
 if __name__ == '__main__':
     main()

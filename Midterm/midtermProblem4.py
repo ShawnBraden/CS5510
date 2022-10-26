@@ -1,5 +1,4 @@
 import gym
-from gym.envs.classic_control.cartpole import CartPoleEnv
 
 # Part B
 env = gym.make("CartPole-v1", render_mode="human")
@@ -31,10 +30,6 @@ for i in range(1000):
     observation, reward, terminated, truncated, info = env.step(action)
 
     print("Observation: ", observation)
-    # print("Reward: ", reward)
-    # print("Terminated: ", terminated)
-    # print("Truncated: ", truncated)
-    # print("Info: ", info)
     
     if terminated or truncated:
         observation, info = env.reset()
