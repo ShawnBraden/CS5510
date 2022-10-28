@@ -3,6 +3,7 @@ from fer import FER
 import pandas as pd
 import cv2
 import matplotlib.pyplot as plt 
+import imageio
 
 emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
@@ -87,17 +88,34 @@ def partB():
   score_comparisons.to_csv("./Midterm/problem6/emotionScore.csv", index=False)
 
   df = pd.read_csv("./Midterm/problem6/emotionScore.csv")
-  df.plot(title="Emootions over time")
+  df.plot(title="Emotions over time")
 
   vid.release()
   cv2.destroyAllWindows()
 
 def partC():
-  image = plt.imread("Two_Face.jpeg")
+
+
+  # Read the image
+  img = imageio.imread("./problem6/Two_Face.jpeg")
+  height,width,junk = img.shape
+
+  # Cut the image in half
+  width_cutoff = width // 2
+  s1 = img[:, :width_cutoff]
+  s2 = img[:, width_cutoff:]
+
+  # Save each half
+
+  imageio.imsave("face1.png", s1)
+  imageio.imsave("face2.png", s2)
+
+
+  image = plt.imread("./face1.png")
   emo_detector = FER(mtcnn=True)
 
   captured_emotions = emo_detector.detect_emotions(image)
-  # print(captured_emotions)
+  print(captured_emotions)
 
   # print(captured_emotions)
   plt.imshow(image)
