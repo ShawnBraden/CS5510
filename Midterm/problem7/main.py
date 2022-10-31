@@ -70,8 +70,8 @@ def main():
         plt.plot(aX, aY, label = "A*")
         plt.plot(hX, hY, label = "Hybrid A*", color = "green")
         plt.scatter(oX, oY, label = "Obstacle", marker = ".", color = "red")
-        plt.xlabel('Distance (m)')
-        plt.ylabel('Distance (m)')
+        plt.xlabel('Distance')
+        plt.ylabel('Distance')
         plt.legend(loc='upper left')
         plt.show()
 
