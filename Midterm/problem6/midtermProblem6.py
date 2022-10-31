@@ -107,10 +107,12 @@ def partD():
   s2 = img[:, width_cutoff:]
 
   # Save each half
-  imageio.imsave("./Midterm/problem6/face1.png", s1)
-  imageio.imsave("./Midterm/problem6/face2.png", s2)
+  imageio.imsave("./Midterm/problem6/face1.jpeg", s1)
+  imageio.imsave("./Midterm/problem6/face2.jpeg", s2)
 
-  image = plt.imread("./Midterm/problem6/face1.png")
+  image = plt.imread("./Midterm/problem6/face1.jpeg")
+  image1 = plt.imread("./Midterm/problem6/face2.jpeg")
+
   # image = plt.imread("./Midterm/problem6/Two_Face.jpeg")
 
 
@@ -118,18 +120,26 @@ def partD():
   captured_emotions = emo_detector.detect_emotions(image)
   print("Captured Emotions: ", captured_emotions)
 
+  captured_emotions = emo_detector.detect_emotions(image1)
+  print("Captured Emotions: ", captured_emotions)
+
   # print(captured_emotions)
   plt.imshow(image)
+
+  plt.imshow(image1)
 
   # Use the top Emotion() function to call for the dominant emotion in the image
   dominant_emotion, emotion_score = emo_detector.top_emotion(image)
   print(dominant_emotion, emotion_score)
 
+  dominant_emotion, emotion_score = emo_detector.top_emotion(image1)
+  print(dominant_emotion, emotion_score)
+
 
 def main():
   # partA()
-  partB()
-  # partD()
+  # partB()
+  partD()
 
   plt.show()
   
