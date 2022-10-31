@@ -98,24 +98,26 @@ def pi_2_pi(angle):
 
 
 def move(x, y, yaw, distance, steer, L=L):
-    # x += distance * cos(yaw)
-    # y += distance * sin(yaw)
-    # yaw += pi_2_pi(distance * tan(steer) / L)  # distance/2
-    # return x, y, yaw
+    x += distance * cos(yaw)
+    y += distance * sin(yaw)
+    yaw += pi_2_pi(distance * tan(steer) / L)  # distance/2
+    return x, y, yaw
+
+
     # yaw = math.radians(yaw)
     
-    if (yaw > 0):
-        v_right = 0
-        v_left = .5
-    else:
-        v_right = .5
-        v_left = 0
+    # if (yaw > 0):
+    #     v_right = 0.01
+    #     v_left = 0.5
+    # else:
+    #     v_right = 0.5
+    #     v_left = 0.01
 
-    x_now = x - (0.5 * (v_right + v_left) * (math.sin(yaw)) * distance)
-    y_now = y + (0.5 * (v_right + v_left) * (math.cos(yaw)) * distance)
-    theata_Now = yaw + (L * (v_right - v_left) * distance)
+    # x_now = x - (0.5 * (v_right + v_left) * (math.sin(yaw)) * distance)
+    # y_now = y + (0.5 * (v_right + v_left) * (math.cos(yaw)) * distance)
+    # theata_Now = yaw + (L * (v_right - v_left) * distance)
 
-    return x_now, y_now, theata_Now
+    # return x_now, y_now, theata_Now
 
 
 def main():

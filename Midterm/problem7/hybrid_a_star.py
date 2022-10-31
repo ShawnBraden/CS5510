@@ -32,7 +32,7 @@ STEER_CHANGE_COST = 5.0  # steer angle change penalty cost
 STEER_COST = 1.0  # steer angle change penalty cost
 H_COST = 5.0  # Heuristic cost
 
-show_animation = True
+show_animation = False
 
 
 class Node:
@@ -444,7 +444,7 @@ def main():
             plot_car(i_x, i_y, i_yaw)
             plt.pause(0.0001)
 
-    return ox, oy, path
+    return ox, oy, x, y
 
 if __name__ == '__main__':
     main()

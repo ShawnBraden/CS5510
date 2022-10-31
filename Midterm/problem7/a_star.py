@@ -257,7 +257,7 @@ def main(problem = "a"):
         for i in range(-1, 11): # left border
             ox.append(-1.0)
             oy.append(i)
-        for i in range(0, 5): # botton portion of the obstacle
+        for i in range(0, 5): # bottom portion of the obstacle
             ox.append(3.0)
             oy.append(i)
         for i in range(6, 9): # top portion of the obstacle
@@ -328,7 +328,10 @@ def main(problem = "a"):
         plt.pause(0.001)
         plt.show()
 
-    return totalDistance, totalTime
+    if problem == "a":
+        return totalDistance, totalTime
+    else:
+        return rx, ry
 
 
 if __name__ == '__main__':

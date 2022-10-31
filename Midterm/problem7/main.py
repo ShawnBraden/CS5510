@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 algorithmNames = ["Easy A*", "A*", "Bidir A*", "Djikstra", "RRT*", "BFS"]
 distance = []
 time = []
-problem = "a" # options are "a" or "b" (for problem 7a or 7b)
+problem = "b" # options are "a" or "b" (for problem 7a or 7b)
 
 def main():
     if problem == "a":
@@ -60,27 +60,19 @@ def main():
 
     elif problem == "b":
         print("#### A* ####")
-        aStar = a_star.main("b")
-        distance.append(aStar[0])
-        time.append(aStar[1])
+        aX, aY = a_star.main("b")
 
         print("#### Hybrid A* ####")
-        hybridAStar = hybrid_a_star.main()
-        distance.append(hybridAStar[0])
-        time.append(hybridAStar[1])
-
+        oX, oY, hX, hY = hybrid_a_star.main()
+        
         # graph distance
-        plt.bar(algorithmNames, distance)
-        plt.title('Distance Comparison')
-        plt.xlabel('Algorithms')
-        plt.ylabel('Average Distance (m)')
-        plt.show()
-
-        # graph time
-        plt.bar(algorithmNames, time)
-        plt.title('Time Comparison')
-        plt.xlabel('Algorithms')
-        plt.ylabel('Average Time (ms)')
+        plt.title('Final Trajectories')
+        plt.plot(aX, aY, label = "A*")
+        plt.plot(hX, hY, label = "Hybrid A*", color = "green")
+        plt.scatter(oX, oY, label = "Obstacle", marker = ".", color = "red")
+        plt.xlabel('Distance (m)')
+        plt.ylabel('Distance (m)')
+        plt.legend(loc='upper left')
         plt.show()
 
 

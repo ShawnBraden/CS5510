@@ -137,9 +137,9 @@ def partD():
 
 
 def main():
-  # partA()
+  partA()
   # partB()
-  partD()
+  # partD()
 
   plt.show()
   
