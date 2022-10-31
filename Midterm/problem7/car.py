@@ -8,6 +8,7 @@ author: Zheng Zh (@Zhengzh)
 
 import sys
 import pathlib
+import math
 root_dir = pathlib.Path(__file__).parent.parent.parent
 sys.path.append(str(root_dir))
 
@@ -18,10 +19,12 @@ import numpy as np
 
 from angle import rot_mat_2d
 
-WB = 3.0  # rear to front wheel
-W = 2.0  # width of car
-LF = 3.3  # distance from rear to vehicle front end
-LB = 1.0  # distance from rear to vehicle back end
+# WB = 3.0  # rear to front wheel
+# W = 2.0  # width of car
+L = 40.0 * 0.0254 # rear to front wheel in inches
+W = 33.0 * 0.0254  # width of car in iches
+LF = L  # distance from rear to vehicle front end
+LB = 0  # distance from rear to vehicle back end
 MAX_STEER = 0.6  # [rad] maximum steering angle
 
 BUBBLE_DIST = (LF - LB) / 2.0  # distance from rear to center of vehicle.
@@ -94,12 +97,25 @@ def pi_2_pi(angle):
     return (angle + pi) % (2 * pi) - pi
 
 
-def move(x, y, yaw, distance, steer, L=WB):
-    x += distance * cos(yaw)
-    y += distance * sin(yaw)
-    yaw += pi_2_pi(distance * tan(steer) / L)  # distance/2
+def move(x, y, yaw, distance, steer, L=L):
+    # x += distance * cos(yaw)
+    # y += distance * sin(yaw)
+    # yaw += pi_2_pi(distance * tan(steer) / L)  # distance/2
+    # return x, y, yaw
+    # yaw = math.radians(yaw)
+    
+    if (yaw > 0):
+        v_right = 0
+        v_left = .5
+    else:
+        v_right = .5
+        v_left = 0
 
-    return x, y, yaw
+    x_now = x - (0.5 * (v_right + v_left) * (math.sin(yaw)) * distance)
+    y_now = y + (0.5 * (v_right + v_left) * (math.cos(yaw)) * distance)
+    theata_Now = yaw + (L * (v_right - v_left) * distance)
+
+    return x_now, y_now, theata_Now
 
 
 def main():

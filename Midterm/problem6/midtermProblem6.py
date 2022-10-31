@@ -2,14 +2,14 @@ from fer import Video
 from fer import FER
 import pandas as pd
 import cv2
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import imageio
 
 emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 def partA():
   # Put in the location of the video file that has to be processed
-  location_videofile = "./content/Video_One.mp4"
+  location_videofile = "./Midterm/problem6/Video_One.mp4"
 
   # Build the Face detection detector
   face_detector = FER(mtcnn=True)
@@ -48,7 +48,9 @@ def partA():
 
 def partB():
   # define a video capture object
-  vid = cv2.VideoCapture(0)
+  cap = cv2.VideoCapture(0)
+  fourcc = cv2.VideoWriter_fourcc(*'XVID')
+  out = cv2.VideoWriter('./Midterm/problem6/screen_recording.avi', fourcc, 20.0, (640, 480))
   
   # The dataframe that will hold the emotions score for each frame of the live video feed
   score_comparisons = pd.DataFrame(columns = emotions)
@@ -58,11 +60,10 @@ def partB():
   emo_detector = FER(mtcnn=True)
   i = 0
   while(i < 10):
-      ret, frame = vid.read()
+      ret, frame = cap.read()
 
       # Capture all the emotions on the image
       captured_emotions = emo_detector.detect_emotions(frame)
-      print(emo_detector.top_emotion(frame))
 
       if (not captured_emotions):
         continue
@@ -90,14 +91,14 @@ def partB():
   df = pd.read_csv("./Midterm/problem6/emotionScore.csv")
   df.plot(title="Emotions over time")
 
-  vid.release()
+  cap.release()
+  out.release() 
   cv2.destroyAllWindows()
 
-def partC():
-
+def partD():
 
   # Read the image
-  img = imageio.imread("./problem6/Two_Face.jpeg")
+  img = imageio.imread("./Midterm/problem6/Two_Face.jpeg")
   height,width,junk = img.shape
 
   # Cut the image in half
@@ -106,16 +107,16 @@ def partC():
   s2 = img[:, width_cutoff:]
 
   # Save each half
+  imageio.imsave("./Midterm/problem6/face1.png", s1)
+  imageio.imsave("./Midterm/problem6/face2.png", s2)
 
-  imageio.imsave("face1.png", s1)
-  imageio.imsave("face2.png", s2)
+  image = plt.imread("./Midterm/problem6/face1.png")
+  # image = plt.imread("./Midterm/problem6/Two_Face.jpeg")
 
 
-  image = plt.imread("./face1.png")
   emo_detector = FER(mtcnn=True)
-
   captured_emotions = emo_detector.detect_emotions(image)
-  print(captured_emotions)
+  print("Captured Emotions: ", captured_emotions)
 
   # print(captured_emotions)
   plt.imshow(image)
@@ -127,13 +128,9 @@ def partC():
 
 def main():
   # partA()
-  # partB()
-  partC()
+  partB()
+  # partD()
 
-  # plot the data
-  
-  # plt.show()
+  plt.show()
   
 main()
-
-

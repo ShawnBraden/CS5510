@@ -9,5 +9,5 @@ def getTotalDistance(path):
   return totalDistance
 
 def printResults(totalDistance, totalTime):
-  print(f"Average time: {totalTime / 10 : 0.8f}")
+  print(f"Average Time: {totalTime / 10 : 0.8f}")
   print(f"Average Length: {totalDistance/10 : 0.4f}\n")

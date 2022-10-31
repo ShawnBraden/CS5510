@@ -13,11 +13,13 @@ import numpy as np
 from scipy.spatial import cKDTree
 import sys
 import pathlib
+import time
+import utils
 sys.path.append(str(pathlib.Path(__file__).parent.parent))
 
 from dynamic_programming_heuristic import calc_distance_heuristic
 import reeds_shepp_path_planning as rs
-from car import move, check_car_collision, MAX_STEER, WB, plot_car, BUBBLE_R
+from car import move, check_car_collision, MAX_STEER, L, plot_car, BUBBLE_R
 
 XY_GRID_RESOLUTION = 2.0  # [m]
 YAW_GRID_RESOLUTION = np.deg2rad(15.0)  # [rad]
@@ -158,7 +160,7 @@ def analytic_expansion(current, goal, ox, oy, kd_tree):
     goal_y = goal.y_list[-1]
     goal_yaw = goal.yaw_list[-1]
 
-    max_curvature = math.tan(MAX_STEER) / WB
+    max_curvature = math.tan(MAX_STEER) / L
     paths = rs.calc_paths(start_x, start_y, start_yaw,
                           goal_x, goal_y, goal_yaw,
                           max_curvature, step_size=MOTION_RESOLUTION)
@@ -414,12 +416,23 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
+    startTime = time.perf_counter()
     path = hybrid_a_star_planning(
         start, goal, ox, oy, XY_GRID_RESOLUTION, YAW_GRID_RESOLUTION)
+    endTime = time.perf_counter()
 
     x = path.x_list
     y = path.y_list
     yaw = path.yaw_list
+
+    path = []
+    for i in range(len(x)):
+        path.append([x[i], y[i]])
+
+    totalDistance = utils.getTotalDistance(path)
+    totalTime = endTime - startTime
+    print(f"Time: {totalTime / 10 : 0.8f}")
+    print(f"Length: {totalDistance/10 : 0.4f}\n")
 
     if show_animation:
         for i_x, i_y, i_yaw in zip(x, y, yaw):
@@ -431,8 +444,7 @@ def main():
             plot_car(i_x, i_y, i_yaw)
             plt.pause(0.0001)
 
-    print(__file__ + " done!!")
-
+    return ox, oy, path
 
 if __name__ == '__main__':
     main()

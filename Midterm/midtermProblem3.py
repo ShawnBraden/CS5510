@@ -91,7 +91,6 @@ def main():
     print("Final Point (x, y, z): ", finalPoint)
     print("Final Thetas (degrees): θ1 = %2d, θ4 = %2d, θ5 = %2d, θ6 = %2d" % (math.degrees(finalThatas[0]), math.degrees(finalThatas[3]), math.degrees(finalThatas[4]), math.degrees(finalThatas[5])))
     print("Final Distances (meters): d2 = %2f, d3 = %2f, d6 = %2f\n" % (finalDistances[1], finalDistances[2], finalDistances[5]))
-    
 
   # problem c
     finalPoint, finalThatas, finalDistances = computeTravel(B_STARTING_THETA, B_STARTING_DISTANCE, "c")

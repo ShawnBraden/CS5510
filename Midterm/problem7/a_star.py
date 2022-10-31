@@ -37,6 +37,7 @@ class AStarPlanner:
         self.x_width, self.y_width = 0, 0
         self.motion = self.get_motion_model()
         self.calc_obstacle_map(ox, oy)
+        self.problem = "b"
 
     class Node:
         def __init__(self, x, y, cost, parent_index):
@@ -231,40 +232,67 @@ class AStarPlanner:
         return motion
 
 
-def main():
-    # start and goal position
-    sx = 0.0  # [m]
-    sy = 0.0  # [m]
-    gx = 7.0  # [m]
-    gy = 6.0  # [m]
-    grid_size = 1.0  # [m]
-    robot_radius = 0.5  # [m]
+def main(problem = "a"):
 
     # set obstacle positions
-    ox, oy = [], []
-    for i in range(-1, 10): # bottom border
-        ox.append(i)
-        oy.append(-1.0)
-    for i in range(-1, 10): # right border
-        ox.append(10.0)
-        oy.append(i)
-    for i in range(-1, 11): # top border
-        ox.append(i)
-        oy.append(10.0)
-    for i in range(-1, 11): # left border
-        ox.append(-1.0)
-        oy.append(i)
-    for i in range(0, 5): # botton portion of the obstacle
-        ox.append(3.0)
-        oy.append(i)
-    for i in range(6, 9): # top portion of the obstacle
-        ox.append(3.0)
-        oy.append(i)
-    
-    # for i in range(len(ox)):
-    #     print("Obstacle Coordinate: ({}, {})\n".format(ox[i], oy[i]))
+    if problem == "a":
+        # start and goal position
+        sx = 0.0  # [m]
+        sy = 0.0  # [m]
+        gx = 7.0  # [m]
+        gy = 6.0  # [m]s
+        grid_size = 1.0  # [m]
+        robot_radius = 0.5  # [m]
 
-    if show_animation:  # pragma: no cover
+        ox, oy = [], []
+        for i in range(-1, 10): # bottom border
+            ox.append(i)
+            oy.append(-1.0)
+        for i in range(-1, 10): # right border
+            ox.append(10.0)
+            oy.append(i)
+        for i in range(-1, 11): # top border
+            ox.append(i)
+            oy.append(10.0)
+        for i in range(-1, 11): # left border
+            ox.append(-1.0)
+            oy.append(i)
+        for i in range(0, 5): # botton portion of the obstacle
+            ox.append(3.0)
+            oy.append(i)
+        for i in range(6, 9): # top portion of the obstacle
+            ox.append(3.0)
+            oy.append(i)
+    else:
+        # start and goal position
+        sx = 10.0  # [m]
+        sy = 10.0  # [m]
+        gx = 50.0  # [m]
+        gy = 50.0  # [m]
+        grid_size = 2.0  # [m]
+        robot_radius = (33.0 * 0.0254) / 2  # [m]
+
+        ox, oy = [], []
+        for i in range(60):
+            ox.append(i)
+            oy.append(0.0)
+        for i in range(60):
+            ox.append(60.0)
+            oy.append(i)
+        for i in range(61):
+            ox.append(i)
+            oy.append(60.0)
+        for i in range(61):
+            ox.append(0.0)
+            oy.append(i)
+        for i in range(40):
+            ox.append(20.0)
+            oy.append(i)
+        for i in range(40):
+            ox.append(40.0)
+            oy.append(60.0 - i)
+
+    if show_animation: # pragma: no cover
         plt.plot(ox, oy, ".k")
         plt.plot(sx, sy, "og")
         plt.plot(gx, gy, "xb")
@@ -275,7 +303,13 @@ def main():
 
     totalDistance = 0
     totalTime = 0
-    for i in range(10):
+
+    if problem == "a":
+        runs = 10
+    else:
+        runs = 1
+
+    for i in range(runs):
         start = time.perf_counter()
         rx, ry = a_star.planning(sx, sy, gx, gy)
         end = time.perf_counter()
