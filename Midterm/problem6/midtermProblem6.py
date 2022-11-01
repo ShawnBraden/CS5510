@@ -110,29 +110,25 @@ def partD():
   imageio.imsave("./Midterm/problem6/face1.jpeg", s1)
   imageio.imsave("./Midterm/problem6/face2.jpeg", s2)
 
-  image = plt.imread("./Midterm/problem6/face1.jpeg")
-  image1 = plt.imread("./Midterm/problem6/face2.jpeg")
-
-  # image = plt.imread("./Midterm/problem6/Two_Face.jpeg")
-
+  image1 = plt.imread("./Midterm/problem6/face1.jpeg")
+  image2 = plt.imread("./Midterm/problem6/face2.jpeg")
 
   emo_detector = FER(mtcnn=True)
-  captured_emotions = emo_detector.detect_emotions(image)
-  print("Captured Emotions: ", captured_emotions)
-
   captured_emotions = emo_detector.detect_emotions(image1)
   print("Captured Emotions: ", captured_emotions)
 
-  # print(captured_emotions)
-  plt.imshow(image)
+  captured_emotions = emo_detector.detect_emotions(image2)
+  print("Captured Emotions: ", captured_emotions)
 
+  # print(captured_emotions)
   plt.imshow(image1)
+  plt.imshow(image2)
 
   # Use the top Emotion() function to call for the dominant emotion in the image
-  dominant_emotion, emotion_score = emo_detector.top_emotion(image)
+  dominant_emotion, emotion_score = emo_detector.top_emotion(image1)
   print(dominant_emotion, emotion_score)
 
-  dominant_emotion, emotion_score = emo_detector.top_emotion(image1)
+  dominant_emotion, emotion_score = emo_detector.top_emotion(image2)
   print(dominant_emotion, emotion_score)
 
 
