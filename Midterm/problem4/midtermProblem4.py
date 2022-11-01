@@ -1,11 +1,5 @@
 import gym
 
-from gym.envs.classic_control.acrobot import AcrobotEnv
-from gym.envs.classic_control.cartpole import CartPoleEnv
-from gym.envs.classic_control.continuous_mountain_car import Continuous_MountainCarEnv
-from gym.envs.classic_control.mountain_car import MountainCarEnv
-from gym.envs.classic_control.pendulum import PendulumEnv
-
 # Part B
 env = gym.make("CartPole-v1", render_mode="human")
 observation, info = env.reset(seed=42)
@@ -15,7 +9,7 @@ action = env.action_space.sample()
 
 for i in range(1000):  
 
-    # determine the directon we need to move base on the pole's angle, current position and pole angular velocity
+    # determine the direction we need to move based on the pole's angle, current position and pole angular velocity
     cartPosition = observation[0]
     poleAngle = observation[2]
     poleAngularVelocity = observation[3]
